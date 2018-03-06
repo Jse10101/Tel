@@ -12,8 +12,8 @@ public class Particular extends Cliente{
 
 	}
 
-	public Particular(String nombre, String NIF, Direccion direccion, String correo, Calendar fechaAlta, Tarifa tarifa, String apellidos) {
-		super(nombre, NIF, direccion, correo, fechaAlta, tarifa);
+	public Particular(String nombre, String nif, Direccion direccion, String correo, Calendar fechaAlta, Tarifa tarifa, String apellidos) {
+		super(nombre, nif, direccion, correo, fechaAlta, tarifa);
 		this.apellidos = apellidos;
 
 	}

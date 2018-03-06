@@ -2,56 +2,110 @@ package cliente;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import tarifa.Tarifa;
+
 import datos.Direccion;
-import factura.Factura;
-import llamada.Llamada;
-import datos.Direccion;
-import interfazFecha.Fecha;
+import fecha.FechaInt;
 import llamada.Llamada;
 import tarifa.Tarifa;
 
 public abstract class Cliente {
 	private String nombre;
-	private String NIF;
+	private String nif;
 	private Direccion direccion;
 	private String correoElectronico;
-	private Calendar fechaDeAlta;
+	private Calendar fechaAlta;
 	private Tarifa tarifa;
-	private ArrayList<Factura> listFacturas; 
+	private ArrayList<Integer> listIdFacturas; 
 	private ArrayList<Llamada> listLlamadas;
+	private Calendar fechaultimafactura;
 	
 	public Cliente(){
 		super();
-		this.listFacturas = new ArrayList<Factura>();
+		this.listIdFacturas = new ArrayList<Integer>();
 		this.listLlamadas = new ArrayList<Llamada>();
 	}
 	
-	public Cliente(String nombre, String NIF, Direccion direccion, String correoElectronico, Calendar fechaDeAlta, Tarifa tarifa){
+	public Cliente(String nombre, String nif, Direccion direccion, String correoElectronico, Calendar fechaAlta, Tarifa tarifa){
 		super();
 		this.nombre = nombre;
-		this.NIF = NIF;
+		this.nif = nif;
 		this.direccion = direccion;
 		this.correoElectronico = correoElectronico;
-		this.fechaDeAlta = fechaDeAlta;
+		this.fechaAlta = fechaAlta;
 		this.tarifa = tarifa;
-		this.listFacturas = new ArrayList<Factura>();
+		this.listIdFacturas = new ArrayList<Integer>();
 		this.listLlamadas = new ArrayList<Llamada>();
 	}
-	//No va aquí.
+	
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getNif() {
+		return nif;
+	}
+
+	public void setNif(String nif) {
+		this.nif = nif;
+	}
+
+	public Direccion getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(Direccion direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getCorreo() {
+		return correoElectronico;
+	}
+
+	public void setCorreo(String correoElectronico) {
+		this.correoElectronico = correoElectronico;
+	}
+
+	public Calendar getFecha() {
+		return fechaAlta;
+	}
+
+	public void setFechaAlta(Calendar fechaAlta) {
+		this.fechaAlta = fechaAlta;
+	}
+
+	public Tarifa getTarifa() {
+		return tarifa;
+	}
+
+	public void setTarifa(Tarifa tarifa) {
+		this.tarifa = tarifa;
+	}
+
+	public ArrayList<Integer> getListIdFacturas() {
+		return listIdFacturas;
+	}
+
+	public void setListIdFactuas(ArrayList<Integer> listFactuas) {
+		this.listIdFacturas = listIdFacturas;
+	}
+
 	public ArrayList<Llamada> getListLlamadas() {
 		return listLlamadas;
 	}
-	
-	public ArrayList<Factura> getListIdFactuas() {
-		return listFacturas;
+
+	public void setListLlamadas(ArrayList<Llamada> listLlamadas) {
+		this.listLlamadas = listLlamadas;
 	}
-	
-	public void cambiaTarifa(Tarifa nuevaTarifa) {
-		this.tarifa = nuevaTarifa;
+
+	public Calendar getFechaultimafactura() {
+		return fechaultimafactura;
 	}
-	
-	public void addLlamada(int telefono, Calendar fecha, Calendar horaDeLaLlamada, int duracion) {
-		listLlamadas.add(new Llamada(telefono, fecha, horaDeLaLlamada, duracion));
+
+	public void setFechaultimafactura(Calendar fechaultimafactura) {
+		this.fechaultimafactura = fechaultimafactura;
 	}
 }
