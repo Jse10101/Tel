@@ -7,7 +7,7 @@ import datos.Direccion;
 import tarifa.Tarifa;
 
 public interface ControladorInt {
-	boolean generarFactura(String NIF);
+	boolean generarFactura(String nif);
 
 	boolean recuperarDatosFactura(int id);
 
