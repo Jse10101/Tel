@@ -9,6 +9,8 @@ import llamada.Llamada;
 import tarifa.Tarifa;
 
 public abstract class Cliente {
+	//ESTA MUY BIEN ESTO DEL GITHUB 
+	//OJALA MORIR
 	private String nombre;
 	private String nif;
 	private Direccion direccion;
