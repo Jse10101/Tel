@@ -2,10 +2,10 @@ package tarifa;
 
 public class Tarifa {
 	double tarifa;
-	Tarifa(){
+	public Tarifa(){
 		super();
 	}
-	Tarifa(double precioPorSegundo){
+	public Tarifa(double precioPorSegundo){
 		super();
 		tarifa = precioPorSegundo;
 	}

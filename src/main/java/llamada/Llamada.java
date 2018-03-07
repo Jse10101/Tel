@@ -5,17 +5,15 @@ import java.util.Calendar;
 public class Llamada {
 	int telefono;
 	Calendar fecha;
-	Calendar horaDeLaLlamada;
-	int duracion;
+	double duracion;
 	
-	Llamada(){
+	public Llamada(){
 		super();
 	}
-	Llamada(int telefono, Calendar fecha, Calendar horaDeLaLlamada, int duracion){
+	public Llamada(int telefono, Calendar fecha, double duracion){
 		super();
 		this.telefono = telefono;
 		this.fecha = fecha;
-		this.horaDeLaLlamada = horaDeLaLlamada;
 		this.duracion = duracion;
 	}
 }

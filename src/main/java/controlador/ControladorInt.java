@@ -15,11 +15,11 @@ public interface ControladorInt {
 	
 	boolean altaLlamada(String nif, int telefono, double tiempo);
 
-	boolean listLlamdasCliente(String nif);
+	boolean listLlamadasCliente(String nif);
 
-	boolean nuevoCliente(String nombre, String apellidos, String nif, Direccion direccion, String correo, Calendar fechaAlta, Tarifa tarifa);
+	boolean nuevoCliente(String nombre, String apellidos, String nif, int codigoPostal, String poblacion, String provincia, String correo, int dia, int hora, Double tarifa);
 
-	boolean nuevaEmpresa(String nombre, String nif, Direccion direccion, String correo, Calendar fechaAlta, Tarifa tarifa);
+	boolean nuevaEmpresa(String nombre, String apellidos, String nif, int codigoPostal, String poblacion, String provincia, String correo, int dia, int hora, Double tarifa);
 
 	boolean borrarCliente(String nif);
 

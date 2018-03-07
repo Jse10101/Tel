@@ -5,11 +5,11 @@ public class Direccion {
 	String provincia;
 	String poblacion;
 	
-	Direccion(){
+	public Direccion(){
 		super();
 	}
 	
-	Direccion(int codigoPostal, String provincia, String poblacion){
+	public Direccion(int codigoPostal, String provincia, String poblacion){
 		super();
 		this.codigoPostal = codigoPostal;
 		this.provincia = provincia;
