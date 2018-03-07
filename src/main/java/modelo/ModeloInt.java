@@ -20,16 +20,13 @@ public interface ModeloInt {
 	Set<String> getAllClients();
 	
 	boolean addLlamada(Llamada llamada, String nif);
-	boolean listaTodasLasLLamadasDeUnCliente(String nif);
+	boolean LlamadasDeUnCliente(String nif);
 	List<Llamada> getListLlamdasCliente();
-	
-	
-	
-	
+
 	boolean generarFactura(String nif);
 	boolean recuperarFacturaId(int id);
 	Factura getFacturaBuscada();
 	boolean recuperarFacturasCliente(String nif);
-	List<Factura> getFacturascliente();
+	List<Factura> getFacturasCliente();
 	HashMap<Integer, Factura> getListaFacturas();
 }

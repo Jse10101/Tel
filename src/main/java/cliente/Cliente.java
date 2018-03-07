@@ -9,8 +9,6 @@ import llamada.Llamada;
 import tarifa.Tarifa;
 
 public abstract class Cliente {
-	//ESTA MUY BIEN ESTO DEL GITHUB 
-	//OJALA MORIR
 	private String nombre;
 	private String nif;
 	private Direccion direccion;
@@ -20,7 +18,7 @@ public abstract class Cliente {
 	private ArrayList<Integer> listIdFacturas; 
 	private ArrayList<Llamada> listLlamadas;
 	private Calendar fechaultimafactura;
-	//lmao
+	
 	public Cliente(){
 		super();
 		this.listIdFacturas = new ArrayList<Integer>();
@@ -91,7 +89,7 @@ public abstract class Cliente {
 		return listIdFacturas;
 	}
 
-	public void setListIdFactuas(ArrayList<Integer> listFactuas) {
+	public void setListIdFactuas(ArrayList<Integer> listIdFacturas) {
 		this.listIdFacturas = listIdFacturas;
 	}
 

@@ -8,15 +8,17 @@ import datos.Direccion;
 import tarifa.Tarifa;
 
 public class Controlador implements ControladorInt {
-
-	public boolean generarFactura(String NIF) {
+	private ModeloInt modelo;
+	
+	public boolean generarFactura(String nif) {
 		// TODO Auto-generated method stub
-		return false;
+		return result;
 	}
-
+	
+	@Override
 	public boolean recuperarDatosFactura(int id) {
 		// TODO Auto-generated method stub
-		return false;
+
 	}
 
 	public boolean recuperarFacurasCliente(String nif) {

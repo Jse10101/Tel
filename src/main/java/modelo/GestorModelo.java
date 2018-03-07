@@ -1,84 +1,79 @@
 package modelo;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 import cliente.Cliente;
+import datos.BaseDeDatos;
 import factura.Factura;
+import fecha.FechaInt;
 import llamada.Llamada;
 import tarifa.Tarifa;
 
-public class GestorModelo implements ModeloInt {
 
+public class GestorModelo implements ModeloInt {
+	BaseDeDatos dato;
+	public GestorModelo(){
+		super();
+		dato = new BaseDeDatos();
+	}
 	public boolean nuevoCliente(Cliente cliente) {
-		// TODO Auto-generated method stub
-		return false;
+		return dato.nuevoCliente(cliente);
 	}
 
 	public boolean borrarCliente(String nif) {
-		// TODO Auto-generated method stub
-		return false;
+		return dato.borrarCliente(nif);
 	}
 
-	public boolean cambiarTarifa(String NIF, Tarifa tarifa) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean cambiarTarifa(String nif, Tarifa tarifa) {
+		return dato.cambiarTarifa(nif, tarifa);
 	}
 
 	public Cliente getCliente(String nif) {
-		// TODO Auto-generated method stub
-		return null;
+		return dato.getCliente(nif);
 	}
 
 	public Set<String> getAllClients() {
-		// TODO Auto-generated method stub
-		return null;
+		return dato.getAllClients();
 	}
 
 	public boolean addLlamada(Llamada llamada, String nif) {
-		// TODO Auto-generated method stub
-		return false;
+		return dato.addLlamada(llamada,nif);
 	}
 
-	public boolean listaTodasLasLLamadasDeUnCliente(String nif) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean LlamadasDeUnCliente(String nif) {
+		return dato.LlamadasDeUnCliente(nif);
 	}
 
 	public List<Llamada> getListLlamdasCliente() {
-		// TODO Auto-generated method stub
-		return null;
+		return dato.getListLlamdasCliente();
 	}
 
 	public boolean generarFactura(String nif) {
-		// TODO Auto-generated method stub
-		return false;
+		return dato.generarFactura(nif);
 	}
 
 	public boolean recuperarFacturaId(int id) {
-		// TODO Auto-generated method stub
-		return false;
+		return dato.recuperarFacturaId(id);
 	}
 
 	public Factura getFacturaBuscada() {
-		// TODO Auto-generated method stub
-		return null;
+		return dato.getFacturaBuscada();
 	}
 
 	public boolean recuperarFacturasCliente(String nif) {
-		// TODO Auto-generated method stub
-		return false;
+		return dato.recuperarFacturasCliente(nif);
 	}
 
-	public List<Factura> getFacturascliente() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Factura> getFacturasCliente() {
+		return dato.getFacturasCliente();
 	}
 
 	public HashMap<Integer, Factura> getListaFacturas() {
-		// TODO Auto-generated method stub
-		return null;
+		return dato.getListaFacturas();
 	}
 
 }
