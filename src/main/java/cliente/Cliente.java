@@ -18,7 +18,7 @@ public abstract class Cliente {
 	private ArrayList<Integer> listIdFacturas; 
 	private ArrayList<Llamada> listLlamadas;
 	private Calendar fechaultimafactura;
-	
+	//lmao
 	public Cliente(){
 		super();
 		this.listIdFacturas = new ArrayList<Integer>();
