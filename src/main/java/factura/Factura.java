@@ -1,9 +1,11 @@
 package factura;
 
 import java.util.Calendar;
+
+import fecha.FechaInt;
 import tarifa.Tarifa;
 
-public class Factura {
+public class Factura implements FechaInt {
 	Integer codigo;
 	Tarifa tarifa;
 	Calendar fechaInicio;

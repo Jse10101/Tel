@@ -146,9 +146,18 @@ public class BaseDeDatos{
 	public boolean recuperarFacturasCliente(String nif) {
 		listaFacturasCliente = new ArrayList<Factura>();
 		Cliente cliente = listaClientes.get(nif);
-		if (cliente != null) {
+		if (cliente == null) {
+			//El cliente no existe.
+			System.out.println("El nif introducido es incorrecto.");
+			return false;
+		} else {
+			//El cliente sí existe
 			ArrayList<Integer> facturas = cliente.getListCodigoFacturas();
 			if (!facturas.isEmpty()) {
+				//El cliente no tiene facturas.
+				System.out.println("Cliente sin facturas.");
+				return false;
+			} else {
 				//Si la lista de facturas no está vacía, las muestra una a una recorriéndola y las guarda en una nueva lista
 				System.out.println("Facturas: ");
 				for (Integer contador : facturas) {
@@ -156,15 +165,8 @@ public class BaseDeDatos{
 					System.out.println(listaFacturas.get(contador).toString());
 				}
 				return true;
-			} else {
-				//El cliente no tiene facturas.
-				System.out.println("Cliente sin facturas.");
-				return false;
 			}
-		} else {
-			//El cliente no existe.
-			System.out.println("El nif introducido es incorrecto.");
-			return false;
+
 		}
 	}
 	//Genera una nueva factura
@@ -172,25 +174,30 @@ public class BaseDeDatos{
 		Cliente cliente = listaClientes.get(nif);
 		double importe = 0.0;
 		Boolean hayLLamadaParaFacturar = false;
-		if (cliente != null) {
-			ArrayList<Integer> lista = cliente.getListCodigoFacturas();
-			if (lista.isEmpty()) { //Cliente sin facturas, facturamos sus llamadas.
-				ArrayList<Llamada> llamadas = cliente.getListLlamadas();
-				if (llamadas.isEmpty()) {
+		if (cliente == null) {
+			//El cliente no existe
+			System.out.println("El nif introducido es incorrecto.");
+			return false;
+		} else {
+			//El cliente sí existe
+			ArrayList<Integer> listCodigoFacturas = cliente.getListCodigoFacturas();
+			if (listCodigoFacturas.isEmpty()) { //Cliente sin facturas, facturamos sus llamadas.
+				ArrayList<Llamada> listaLlamadas = cliente.getListLlamadas();
+				if (listaLlamadas.isEmpty()) {	//La lista de llamadas está vacía
 					System.out.println("No hay llamadas.");
 					return false;
 				} else {
-					//Calculamos el precio de todas las llamadas
-					for (Llamada llamada : llamadas) {
+					//Si hay llamadas, calculamos el precio de todas las llamadas
+					for (Llamada llamada : listaLlamadas) {
 						importe += llamada.getDuracion() * cliente.getTarifa().getPrecio(llamada);
 					}
 					//Facturamos
-					Calendar fechafactura = Calendar.getInstance();
-					Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechafactura, fechafactura, cliente.getTarifa(), importe);
+					Calendar fechaFacturacion = Calendar.getInstance();
+					Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechaFacturacion, fechaFacturacion, cliente.getTarifa(), importe);
 					cliente.getListCodigoFacturas().add(factura.getCodigo());
 					listaFacturas.put(factura.getCodigo(), factura);
 					incrementaCodigoFactura();
-					cliente.setFechaUltimaFactura(fechafactura);
+					cliente.setFechaUltimaFactura(fechaFacturacion);
 					System.out.println("Facturado.");
 					return true;
 				}
@@ -209,11 +216,11 @@ public class BaseDeDatos{
 					}
 					//Si hay llamadas para facturar, facturamos como antes
 					if (hayLLamadaParaFacturar) {
-						Calendar fechafactura = Calendar.getInstance();
-						Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechafactura, fechafactura, cliente.getTarifa(), importe);
+						Calendar fechaFacturacion = Calendar.getInstance();
+						Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechaFacturacion, fechaFacturacion, cliente.getTarifa(), importe);
 						cliente.getListCodigoFacturas().add(factura.getCodigo());
 						incrementaCodigoFactura();
-						cliente.setFechaUltimaFactura(fechafactura);
+						cliente.setFechaUltimaFactura(fechaFacturacion);
 						listaFacturas.put(factura.getCodigo(), factura);
 						System.out.println("Facturado.");
 						return true;
@@ -225,13 +232,10 @@ public class BaseDeDatos{
 
 				}
 			}
-
-		} else {
-			System.out.println("El nif introducido es incorrecto.");
-			return false;
 		}
 	}
-
+	
+	//Más sets y gets
 	public Integer getCodigoFactura() {
 		return codigo;
 	}

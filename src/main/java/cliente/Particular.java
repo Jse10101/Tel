@@ -21,17 +21,10 @@ public class Particular extends Cliente{
 		super(nombre, nif);
 		this.apellidos = apellidos;
 	}
-	//Sets y gets
-	public String getApellidos() {
-		return apellidos;
-	}
-
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
+	
 	//ToString
 	public String toString() {
-		return "Nombre: " + getNombre() + "\nApellidos: " + getApellidos() + "\nNIF: " + getNif() + "\n"
+		return "Nombre: " + getNombre() + "\nApellidos: " + apellidos + "\nNIF: " + getNif() + "\n"
 				+ getDireccion().toString() + "\nCorreo: " + getCorreo() + "\nTarifa: " + getTarifa().toString();
 	}
 }
