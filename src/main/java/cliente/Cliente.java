@@ -8,23 +8,24 @@ import fecha.FechaInt;
 import llamada.Llamada;
 import tarifa.Tarifa;
 
-public abstract class Cliente {
+public abstract class Cliente implements FechaInt {
 	private String nombre;
 	private String nif;
 	private Direccion direccion;
 	private String correoElectronico;
 	private Calendar fechaAlta;
 	private Tarifa tarifa;
-	private ArrayList<Integer> listIdFacturas; 
+	private ArrayList<Integer> listCodigoFacturas; 
 	private ArrayList<Llamada> listLlamadas;
-	private Calendar fechaultimafactura;
+	private Calendar fechaUltimaFactura;
 	
+	//Constructor por defecto
 	public Cliente(){
 		super();
-		this.listIdFacturas = new ArrayList<Integer>();
+		this.listCodigoFacturas = new ArrayList<Integer>();
 		this.listLlamadas = new ArrayList<Llamada>();
 	}
-	
+	//Constructores
 	public Cliente(String nombre, String nif, Direccion direccion, String correoElectronico, Calendar fechaAlta, Tarifa tarifa){
 		super();
 		this.nombre = nombre;
@@ -33,10 +34,20 @@ public abstract class Cliente {
 		this.correoElectronico = correoElectronico;
 		this.fechaAlta = fechaAlta;
 		this.tarifa = tarifa;
-		this.listIdFacturas = new ArrayList<Integer>();
+		this.listCodigoFacturas = new ArrayList<Integer>();
 		this.listLlamadas = new ArrayList<Llamada>();
 	}
 	
+	public Cliente(String nombre, String nif) {
+		super();
+		this.nombre = nombre;
+		this.nif = nif;
+		this.fechaAlta = Calendar.getInstance();
+		this.tarifa = new Tarifa(28.8);
+		this.listCodigoFacturas = new ArrayList<Integer>();
+		this.listLlamadas = new ArrayList<Llamada>();
+	}
+	//Sets y gets
 	public String getNombre() {
 		return nombre;
 	}
@@ -85,12 +96,12 @@ public abstract class Cliente {
 		this.tarifa = tarifa;
 	}
 
-	public ArrayList<Integer> getListIdFacturas() {
-		return listIdFacturas;
+	public ArrayList<Integer> getListCodigoFacturas() {
+		return listCodigoFacturas;
 	}
 
-	public void setListIdFactuas(ArrayList<Integer> listIdFacturas) {
-		this.listIdFacturas = listIdFacturas;
+	public void setListCodigoFacturas(ArrayList<Integer> listCodigoFacturas) {
+		this.listCodigoFacturas = listCodigoFacturas;
 	}
 
 	public ArrayList<Llamada> getListLlamadas() {
@@ -101,11 +112,11 @@ public abstract class Cliente {
 		this.listLlamadas = listLlamadas;
 	}
 
-	public Calendar getFechaultimafactura() {
-		return fechaultimafactura;
+	public Calendar getFechaUltimaFactura() {
+		return fechaUltimaFactura;
 	}
 
-	public void setFechaultimafactura(Calendar fechaultimafactura) {
-		this.fechaultimafactura = fechaultimafactura;
+	public void setFechaUltimaFactura(Calendar fechaultimafactura) {
+		this.fechaUltimaFactura = fechaultimafactura;
 	}
 }
