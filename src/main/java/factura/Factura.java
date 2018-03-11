@@ -6,12 +6,12 @@ import fecha.FechaInt;
 import tarifa.Tarifa;
 
 public class Factura implements FechaInt {
-	Integer codigo;
-	Tarifa tarifa;
-	Calendar fechaInicio;
-	Calendar fechaFin;
-	Calendar fechaDeEmision;
-	double importe;
+	private Integer codigo;
+	private Tarifa tarifa;
+	private Calendar fechaInicio;
+	private Calendar fechaFin;
+	private Calendar fechaDeEmision;
+	private double importe;
 	
 	//Constructor por defecto
 	public Factura(){

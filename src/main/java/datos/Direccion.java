@@ -1,9 +1,9 @@
 package datos;
 
 public class Direccion {
-	String codigoPostal;
-	String provincia;
-	String poblacion;
+	private String codigoPostal;
+	private String provincia;
+	private String poblacion;
 	//Constructor por defecto
 	public Direccion(){
 		super();

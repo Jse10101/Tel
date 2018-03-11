@@ -4,9 +4,9 @@ import java.util.Calendar;
 import fecha.FechaInt;
 
 public class Llamada implements FechaInt {
-	int telefono;
-	Calendar fecha;
-	double duracion;
+	private int telefono;
+	private Calendar fecha;
+	private double duracion;
 	
 	//Constructor por defecto
 	public Llamada(){

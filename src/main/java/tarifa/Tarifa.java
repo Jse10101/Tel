@@ -3,7 +3,7 @@ package tarifa;
 import llamada.Llamada;
 
 public class Tarifa {
-	double precio;
+	private double precio;
 	
 	//Constructor por defecto
 	public Tarifa(){
