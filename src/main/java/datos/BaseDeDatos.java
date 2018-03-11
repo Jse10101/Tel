@@ -99,7 +99,7 @@ public class BaseDeDatos{
 			System.out.println("El nif introducido es incorrecto.");
 			return false;
 		}else{
-			cliente.getListLlamadas().add(llamada);
+			cliente.getListaLlamadas().add(llamada);
 			System.out.println("Llamada añadida.");
 			return true;
 		}
@@ -111,7 +111,7 @@ public class BaseDeDatos{
 	public boolean LlamadasDeUnCliente(String nif) {
 		Cliente cliente = listaClientes.get(nif);
 		if (cliente != null) {
-			ArrayList<Llamada> lista = cliente.getListLlamadas();
+			ArrayList<Llamada> lista = cliente.getListaLlamadas();
 			if (lista.isEmpty()) {
 				System.out.println("Cliente sin llamadas.");
 			} else {
@@ -152,7 +152,7 @@ public class BaseDeDatos{
 			return false;
 		} else {
 			//El cliente sí existe
-			ArrayList<Integer> facturas = cliente.getListCodigoFacturas();
+			ArrayList<Integer> facturas = cliente.getListaCodigoFacturas();
 			if (!facturas.isEmpty()) {
 				//El cliente no tiene facturas.
 				System.out.println("Cliente sin facturas.");
@@ -169,20 +169,21 @@ public class BaseDeDatos{
 
 		}
 	}
+	
 	//Genera una nueva factura
 	public boolean generarFactura(String nif) {
 		Cliente cliente = listaClientes.get(nif);
+		Boolean LlamadasParaFacturar = false;
 		double importe = 0.0;
-		Boolean hayLLamadaParaFacturar = false;
 		if (cliente == null) {
 			//El cliente no existe
 			System.out.println("El nif introducido es incorrecto.");
 			return false;
 		} else {
 			//El cliente sí existe
-			ArrayList<Integer> listCodigoFacturas = cliente.getListCodigoFacturas();
+			ArrayList<Integer> listCodigoFacturas = cliente.getListaCodigoFacturas();
 			if (listCodigoFacturas.isEmpty()) { //Cliente sin facturas, facturamos sus llamadas.
-				ArrayList<Llamada> listaLlamadas = cliente.getListLlamadas();
+				ArrayList<Llamada> listaLlamadas = cliente.getListaLlamadas();
 				if (listaLlamadas.isEmpty()) {	//La lista de llamadas está vacía
 					System.out.println("No hay llamadas.");
 					return false;
@@ -194,7 +195,7 @@ public class BaseDeDatos{
 					//Facturamos
 					Calendar fechaFacturacion = Calendar.getInstance();
 					Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechaFacturacion, fechaFacturacion, cliente.getTarifa(), importe);
-					cliente.getListCodigoFacturas().add(factura.getCodigo());
+					cliente.getListaCodigoFacturas().add(factura.getCodigo());
 					listaFacturas.put(factura.getCodigo(), factura);
 					incrementaCodigoFactura();
 					cliente.setFechaUltimaFactura(fechaFacturacion);
@@ -202,7 +203,7 @@ public class BaseDeDatos{
 					return true;
 				}
 			} else { //El cliente tiene facturas anteriores
-				ArrayList<Llamada> llamadas = cliente.getListLlamadas();
+				ArrayList<Llamada> llamadas = cliente.getListaLlamadas();
 				//Si no tiene llamadas
 				if (llamadas.isEmpty()) {
 					System.out.println("Sin llamadas que facturar.");
@@ -210,17 +211,17 @@ public class BaseDeDatos{
 				} else { // Facturamos todas las llamadas desde la última fecha facturada
 					for (Llamada llamada : llamadas) {
 						if (cliente.getFechaUltimaFactura().compareTo(llamada.getFecha()) < 0) {
-							hayLLamadaParaFacturar = true;
+							LlamadasParaFacturar = true;
 							importe += llamada.getDuracion() * cliente.getTarifa().getPrecio(llamada);
 						}
 					}
 					//Si hay llamadas para facturar, facturamos como antes
-					if (hayLLamadaParaFacturar) {
+					if (LlamadasParaFacturar) {
 						Calendar fechaFacturacion = Calendar.getInstance();
 						Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechaFacturacion, fechaFacturacion, cliente.getTarifa(), importe);
-						cliente.getListCodigoFacturas().add(factura.getCodigo());
-						incrementaCodigoFactura();
+						cliente.getListaCodigoFacturas().add(factura.getCodigo());
 						cliente.setFechaUltimaFactura(fechaFacturacion);
+						incrementaCodigoFactura();
 						listaFacturas.put(factura.getCodigo(), factura);
 						System.out.println("Facturado.");
 						return true;

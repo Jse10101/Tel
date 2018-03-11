@@ -76,11 +76,11 @@ public abstract class Cliente implements FechaInt {
 		this.tarifa = tarifa;
 	}
 
-	public ArrayList<Integer> getListCodigoFacturas() {
+	public ArrayList<Integer> getListaCodigoFacturas() {
 		return listaCodigoFacturas;
 	}
 
-	public ArrayList<Llamada> getListLlamadas() {
+	public ArrayList<Llamada> getListaLlamadas() {
 		return listaLlamadas;
 	}
 
