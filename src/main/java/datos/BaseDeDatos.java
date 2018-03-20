@@ -239,6 +239,7 @@ public class BaseDeDatos{
 	}
 	
 	// ENTREGA 2 EN CONSTRUCCION
+	//32123123123
 	public <T extends FechaInt> ArrayList <T> recuperaEntreFechas(ArrayList <T> conjunto, Calendar inicio, Calendar fin ) 
 			throws ErrorRangoDeFechas {
 		if(fin.before(inicio) || inicio.after(fin)){
