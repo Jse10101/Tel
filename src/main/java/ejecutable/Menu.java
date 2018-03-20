@@ -1,8 +1,13 @@
 package ejecutable;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.Set;
 
 import llamada.Llamada;
 import cliente.Cliente;
@@ -10,6 +15,7 @@ import cliente.Empresa;
 import cliente.Particular;
 import datos.BaseDeDatos;
 import datos.Direccion;
+import excepciones.ErrorRangoDeFechas;
 import menu.Aplicacion;
 import menu.MenuClientes;
 import menu.MenuFacturas;
@@ -179,6 +185,50 @@ public class Menu {
 		//Una vez tenemos al cliente como tal, lo añadimos a la lista con todos los clientes.
 		bd.nuevoCliente(cliente);
 	}
+	
+	// Segunda Entrega
+	private void listaClientesDosFechas() throws ErrorRangoDeFechas {
+		
+		Calendar i = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		System.out.println("Fecha de inicio(dd/mm/aaaa): ");
+		String fechaInicio = teclado.next();
+		boolean fechaCorrecta = true;
+		try {
+			Date fecha_date = sdf.parse(fechaInicio);
+			i.setTime(fecha_date);
+		} catch (ParseException e) {
+			System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
+			fechaCorrecta=false;
+		}
+		//Otra vez lo mismo
+		if(fechaCorrecta==true){
+			Calendar f = Calendar.getInstance();
+			System.out.println("Fecha final(dd/mm/aaaa): ");
+			String fechaFin= teclado.next();
+			try {
+				Date fecha_date = sdf.parse(fechaFin);
+				f.setTime(fecha_date);
+			} catch (ParseException e) {
+				System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
+				fechaCorrecta=false;
+			}
+			if(fechaCorrecta==true){
+				Set<String> nifs = bd.getAllClients();
+				ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+				for (String iterador : nifs) {
+					listaClientes.add(bd.getCliente(iterador));
+				}
+				ArrayList<Cliente> clientesEntreFechas = bd.recuperaEntreFechas(listaClientes, i, f);
+				for (Cliente e : clientesEntreFechas) {
+					System.out.println(e.toString());
+				}
+			}	
+		}
+	}
+	
+	
+	
 	
 	//Menú para llamadas
 	private void menuLlamada() {
