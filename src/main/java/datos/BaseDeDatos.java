@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import cliente.Cliente;
+import excepciones.CodigoInvalido;
 import excepciones.ErrorFecha;
+import excepciones.NifInvalido;
 import factura.Factura;
 import fecha.FechaInt;
 import llamada.Llamada;
@@ -95,11 +97,10 @@ public class BaseDeDatos{
 	}
 	
 	//Añade una llamada a un cliente
-	public boolean addLlamada(Llamada llamada, String nif) {
+	public boolean addLlamada(Llamada llamada, String nif) throws NifInvalido {
 		Cliente cliente = listaClientes.get(nif);
 		if (cliente == null) {
-			System.out.println("El nif introducido es incorrecto.");
-			return false;
+			throw new NifInvalido();
 		}else{
 			cliente.getListaLlamadas().add(llamada);
 			System.out.println("Llamada añadida.");
@@ -110,7 +111,7 @@ public class BaseDeDatos{
 	}
 
 	//Muestra todas las llamadas de un cliente
-	public boolean LlamadasDeUnCliente(String nif) {
+	public boolean LlamadasDeUnCliente(String nif) throws NifInvalido {
 		Cliente cliente = listaClientes.get(nif);
 		if (cliente != null) {
 			ArrayList<Llamada> lista = cliente.getListaLlamadas();
@@ -123,14 +124,12 @@ public class BaseDeDatos{
 			}
 			return true;
 		} else {
-
-			System.out.println("El nif introducido es incorrecto.");
-			return false;
+			throw new NifInvalido();
 		}
 	}
 
 	//Muestra facturas de un cliente con el código de factura
-	public boolean recuperarFacturaPorCodigo(int codigo) {
+	public boolean recuperarFacturaPorCodigo(int codigo) throws CodigoInvalido {
 		Factura factura = listaFacturas.get(codigo);
 		if (factura != null) {
 			System.out.println("Datos de la factura: ");
@@ -138,20 +137,18 @@ public class BaseDeDatos{
 			setFacturaBuscada(factura);
 			return true;
 		} else {
-			System.out.println("El código de factura incorrecto.");
-			return false;
+			throw new CodigoInvalido();
 		}
 
 	}
 
 	//Muestra facturas de un cliente con el nif
-	public boolean recuperarFacturasCliente(String nif) {
+	public boolean recuperarFacturasCliente(String nif) throws NifInvalido {
 		listaFacturasCliente = new ArrayList<Factura>();
 		Cliente cliente = listaClientes.get(nif);
 		if (cliente == null) {
 			//El cliente no existe.
-			System.out.println("El nif introducido es incorrecto.");
-			return false;
+			throw new NifInvalido();
 		} else {
 			//El cliente sí existe
 			ArrayList<Integer> facturas = cliente.getListaCodigoFacturas();
@@ -173,14 +170,13 @@ public class BaseDeDatos{
 	}
 	
 	//Genera una nueva factura
-	public boolean generarFactura(String nif) {
+	public boolean generarFactura(String nif) throws ErrorFecha, NifInvalido {
 		Cliente cliente = listaClientes.get(nif);
 		Boolean LlamadasParaFacturar = false;
 		double importe = 0.0;
 		if (cliente == null) {
 			//El cliente no existe
-			System.out.println("El nif introducido es incorrecto.");
-			return false;
+			throw new NifInvalido();
 		} else {
 			//El cliente sí existe
 			ArrayList<Integer> listCodigoFacturas = cliente.getListaCodigoFacturas();
@@ -196,6 +192,8 @@ public class BaseDeDatos{
 					}
 					//Facturamos
 					Calendar fechaFacturacion = Calendar.getInstance();
+					if(cliente.getFecha().after(fechaFacturacion))
+						throw new ErrorFecha();
 					Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechaFacturacion, fechaFacturacion, cliente.getTarifa(), importe);
 					cliente.getListaCodigoFacturas().add(factura.getCodigo());
 					listaFacturas.put(factura.getCodigo(), factura);
@@ -239,7 +237,6 @@ public class BaseDeDatos{
 	}
 	
 	// ENTREGA 2 EN CONSTRUCCION
-	//32123123123
 	public <T extends FechaInt> ArrayList <T> recuperaEntreFechas(ArrayList <T> conjunto, Calendar inicio, Calendar fin ) 
 			throws ErrorFecha {
 		if(fin.before(inicio) || inicio.after(fin)){
