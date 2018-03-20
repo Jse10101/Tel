@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import cliente.Cliente;
+import excepciones.ErrorRangoDeFechas;
 import factura.Factura;
 import fecha.FechaInt;
 import llamada.Llamada;
@@ -241,7 +242,7 @@ public class BaseDeDatos{
 	public <T extends FechaInt> ArrayList <T> recuperaEntreFechas(ArrayList <T> conjunto, Calendar inicio, Calendar fin ) 
 			throws ErrorRangoDeFechas {
 		if(fin.before(inicio) || inicio.after(fin)){
-			throw new ErrorRangoDeFehas();
+			throw new ErrorRangoDeFechas();
 		}
 		ArrayList <T> subconjunto = new ArrayList <T> ();
 		for(int i = 0 ; i < conjunto.size() ; i++ )	{
