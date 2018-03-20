@@ -16,6 +16,8 @@ import cliente.Particular;
 import datos.BaseDeDatos;
 import datos.Direccion;
 import excepciones.ErrorFecha;
+import excepciones.NifInvalido;
+import factura.Factura;
 import menu.Aplicacion;
 import menu.MenuClientes;
 import menu.MenuFacturas;
@@ -188,7 +190,7 @@ public class Menu {
 	
 	// Segunda Entrega
 	
-	private void listaClientesDosFechas() throws ErrorFecha {
+	private void listaClientesEntreDosFechas() throws ErrorFecha {
 		
 		Calendar i = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -196,25 +198,25 @@ public class Menu {
 		String fechaInicio = teclado.next();
 		boolean fechaCorrecta = true;
 		try {
-			Date fecha_date = sdf.parse(fechaInicio);
-			i.setTime(fecha_date);
+			Date fechaDate = sdf.parse(fechaInicio);
+			i.setTime(fechaDate);
 		} catch (ParseException e) {
 			System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
 			fechaCorrecta=false;
 		}
 		//Otra vez lo mismo
-		if(fechaCorrecta==true){
+		if(fechaCorrecta){
 			Calendar f = Calendar.getInstance();
 			System.out.println("Fecha final(dd/mm/aaaa): ");
-			String fechaFin= teclado.next();
+			String fechaFinal= teclado.next();
 			try {
-				Date fecha_date = sdf.parse(fechaFin);
+				Date fecha_date = sdf.parse(fechaFinal);
 				f.setTime(fecha_date);
 			} catch (ParseException e) {
 				System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
 				fechaCorrecta=false;
 			}
-			if(fechaCorrecta==true){
+			if(fechaCorrecta){
 				Set<String> nifs = bd.getAllClients();
 				ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
 				for (String iterador : nifs) {
@@ -271,6 +273,56 @@ public class Menu {
 		bd.LlamadasDeUnCliente(nif);
 	}
 	
+	//Segunda entrega
+	private void listarLlamadasDosFechas() throws ErrorFecha {
+		boolean fechamal=false;
+		System.out.println("Nif del cliente: ");
+		String NIF = teclado.next();
+		Calendar i = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		System.out.println("Fecha de inicio(dd/mm/aaaa): ");
+		String fecha = teclado.next();
+		try {
+			Date fecha_date = sdf.parse(fecha);
+			i.setTime(fecha_date);
+		} catch (ParseException e) {
+			System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
+			fechamal=true;
+
+		}
+		if(fechamal==false){
+			
+		
+			Calendar f = Calendar.getInstance();
+			System.out.println("Fecha final(dd/mm/aaaa): ");
+			String fechaFinal = teclado.next();
+			try {
+				Date fechaDate = sdf.parse(fechaFinal);
+				f.setTime(fechaDate);
+			} catch (ParseException e) {
+				System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
+				fechamal=true;
+
+			}
+			if(fechamal==false){
+				if(bd.getCliente(NIF)!=null){
+					ArrayList<Llamada> datosMostrar = bd.recuperaEntreFechas(bd.getCliente(NIF).getListaLlamadas(), i, f);
+		
+					if (datosMostrar.isEmpty()){
+						System.out.println("No hay llamadas en este perido");
+					}
+					for (Llamada l : datosMostrar) {
+						System.out.println(l.toString());
+					}
+				}else{
+					System.out.println("El nif no existe");
+				}
+			}
+		}
+	}
+	
+	
+	
 	//Menú para facturas
 	private void menuFactura() {
 		System.out.println(MenuFacturas.getMenu());
@@ -316,5 +368,52 @@ public class Menu {
 		System.out.println("Nif del cliente :");
 		nif = teclado.next();
 		bd.recuperarFacturasCliente(nif);
+	}
+	
+	private void listarFacturasEntreDosFechas() throws ErrorFecha, NifInvalido {
+		System.out.println("NIF del cliente: ");
+		String nif = teclado.next();
+		Calendar i = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		System.out.println("Fecha de inicio(dd/mm/yyyy): ");
+		String fecha = teclado.next();
+		boolean fechaCorrecta=false;
+		try {
+			Date fecha_date = sdf.parse(fecha);
+			i.setTime(fecha_date);
+		} catch (ParseException e) {
+			System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
+			fechaCorrecta=false;
+		}
+		if(fechaCorrecta){
+			Calendar f = Calendar.getInstance();
+			System.out.println("Fecha final(dd/mm/aaaa): ");
+			String fechaFinal = teclado.next();
+			try {
+				Date fechaDate = sdf.parse(fechaFinal);
+				f.setTime(fechaDate);
+			} catch (ParseException e) {
+				System.out.println("Fecha introducida incorrecta, recuerde el formato dd/mm/aaaa, por ejemplo: 28/8/1996");
+				fechaCorrecta=false;
+			}
+			if(fechaCorrecta){
+				if(bd.getCliente(nif)==null){
+					throw new NifInvalido();
+				}else{
+					Cliente cliente = bd.getCliente(nif);
+					ArrayList<Factura> datosFiltrar = new ArrayList<Factura>();
+					for (int id : cliente.getListaCodigoFacturas()) {
+						datosFiltrar.add(bd.getListaFacturas().get(id));
+					}
+					ArrayList<Factura> datosMostrar = bd.recuperaEntreFechas(datosFiltrar, i, f);
+					if(datosMostrar.isEmpty()){
+						System.out.println("este cliente no tiene facturas en este periodo");
+					}
+					for (Factura fac : datosMostrar) {
+						System.out.println(fac.toString());
+					}
+				}
+			}
+		}
 	}
 }
