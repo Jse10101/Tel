@@ -15,7 +15,7 @@ import cliente.Empresa;
 import cliente.Particular;
 import datos.BaseDeDatos;
 import datos.Direccion;
-import excepciones.ErrorRangoDeFechas;
+import excepciones.ErrorFecha;
 import menu.Aplicacion;
 import menu.MenuClientes;
 import menu.MenuFacturas;
@@ -188,7 +188,7 @@ public class Menu {
 	
 	// Segunda Entrega
 	
-	private void listaClientesDosFechas() throws ErrorRangoDeFechas {
+	private void listaClientesDosFechas() throws ErrorFecha {
 		
 		Calendar i = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
