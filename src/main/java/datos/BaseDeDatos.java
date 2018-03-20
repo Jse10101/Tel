@@ -238,8 +238,8 @@ public class BaseDeDatos{
 	}
 	
 	// ENTREGA 2 EN CONSTRUCCION
-	public <T extends FechaInt> ArrayList <T> recuperaEntreFechas(ArrayList <T> conjunto, Calendar inicio, Calendar fin )
-		throws ErrorRangoDeFechas() {
+	public <T extends FechaInt> ArrayList <T> recuperaEntreFechas(ArrayList <T> conjunto, Calendar inicio, Calendar fin ) 
+			throws ErrorRangoDeFechas {
 		if(fin.before(inicio) || inicio.after(fin)){
 			throw new ErrorRangoDeFehas();
 		}
@@ -249,6 +249,7 @@ public class BaseDeDatos{
 				subconjunto.add(conjunto.get(i));	
 			}
 		}
+		return subconjunto;
 	}
 	
 	//Más sets y gets
