@@ -1,8 +1,14 @@
 package tarifa;
 
+import java.io.Serializable;
+
 import llamada.Llamada;
 
-public class Tarifa {
+public class Tarifa implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double precio;
 	
 	//Constructor por defecto

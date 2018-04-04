@@ -1,10 +1,16 @@
 package cliente;
 
+import java.io.Serializable;
 import java.util.Calendar;
-import datos.Direccion;
+
+import direccion.Direccion;
 import tarifa.Tarifa;
 
-public class Particular extends Cliente{
+public class Particular extends Cliente implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String apellidos;
 	//Contructores por defecto
 	public Particular() {

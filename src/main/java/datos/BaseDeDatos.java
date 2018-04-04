@@ -1,5 +1,6 @@
 package datos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import cliente.Cliente;
+import entradaSalida.EntradaSalida;
 import excepciones.CodigoInvalido;
 import excepciones.ErrorFecha;
 import excepciones.NifInvalido;
@@ -16,7 +18,11 @@ import fecha.FechaInt;
 import llamada.Llamada;
 import tarifa.Tarifa;
 
-public class BaseDeDatos{
+public class BaseDeDatos implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BaseDeDatos bd;
 	private Integer codigo = 1;
 	private Factura facturaBusc;
@@ -278,6 +284,11 @@ public class BaseDeDatos{
 
 	public BaseDeDatos getBd() {
 		return bd;
+	}
+	
+
+	public void cargar() {
+		EntradaSalida.abrirDatos();
 	}
 
 }

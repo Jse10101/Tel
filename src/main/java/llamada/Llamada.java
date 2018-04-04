@@ -1,9 +1,14 @@
 package llamada;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import fecha.FechaInt;
 
-public class Llamada implements FechaInt {
+public class Llamada implements FechaInt, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int telefono;
 	private Calendar fecha;
 	private double duracion;

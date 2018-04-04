@@ -1,6 +1,13 @@
 package excepciones;
 
-public class CodigoInvalido extends Exception{
+import java.io.Serializable;
+
+public class CodigoInvalido extends Exception implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public CodigoInvalido(){
 		super("El código introucido es inválido.");
 	}

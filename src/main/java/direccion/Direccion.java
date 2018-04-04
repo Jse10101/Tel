@@ -1,6 +1,12 @@
-package datos;
+package direccion;
 
-public class Direccion {
+import java.io.Serializable;
+
+public class Direccion implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codigoPostal;
 	private String provincia;
 	private String poblacion;

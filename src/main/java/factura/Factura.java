@@ -1,11 +1,16 @@
 package factura;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import fecha.FechaInt;
 import tarifa.Tarifa;
 
-public class Factura implements FechaInt {
+public class Factura implements FechaInt, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer codigo;
 	private Tarifa tarifa;
 	private Calendar fechaInicio;

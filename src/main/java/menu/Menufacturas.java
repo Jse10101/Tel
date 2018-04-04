@@ -3,7 +3,8 @@ package menu;
 public enum MenuFacturas {
 	EMITIR_FACTURA("Emitir una factura"),
 	RECUPERAR_FACTURA("Recuperar los datos de una factura"),
-	RECUPERAR_FACTURAS_CLIENTE("Recuperar todas las facturas de un cliente");
+	RECUPERAR_FACTURAS_CLIENTE("Recuperar todas las facturas de un cliente"), 
+	FACTURAS_ENTRE_FECHAS("Muestra todas las facturas entre dos fechas");
 	
 	private String descripcion;
 

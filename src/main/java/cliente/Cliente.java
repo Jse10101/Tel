@@ -1,14 +1,19 @@
 package cliente;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import datos.Direccion;
+import direccion.Direccion;
 import fecha.FechaInt;
 import llamada.Llamada;
 import tarifa.Tarifa;
 
-public abstract class Cliente implements FechaInt {
+public abstract class Cliente implements FechaInt, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String nombre;
 	private String nif;
 	private Direccion direccion;

@@ -4,6 +4,8 @@ public enum Aplicacion {
 	CLIENTE("Operaciones con clientes"),
 	LLAMADA("Operaciones con llamadas"),
 	FACTURAS("Operaciones con facturas"),
+	CARGAR("Cargar archivo con datos"),
+	GUARDAR("Guardar en un archivo todos los datos"),
 	SALIR("Salir del menu");
 	
 	private String descripcion;

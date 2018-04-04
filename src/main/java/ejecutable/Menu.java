@@ -1,6 +1,12 @@
 package ejecutable;
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,7 +20,8 @@ import cliente.Cliente;
 import cliente.Empresa;
 import cliente.Particular;
 import datos.BaseDeDatos;
-import datos.Direccion;
+import direccion.Direccion;
+import excepciones.CodigoInvalido;
 import excepciones.ErrorFecha;
 import excepciones.NifInvalido;
 import factura.Factura;
@@ -35,7 +42,7 @@ public class Menu {
 	}
 	
 	//Abre el primer menú
-	public void ejecuta() {
+	public void ejecuta() throws NifInvalido, CodigoInvalido, ErrorFecha {
 		Aplicacion opcion;
 		Scanner teclado = new Scanner(System.in);
 		do {
@@ -48,7 +55,7 @@ public class Menu {
 	}
 	
 	//Llama al menú de clientes, llamadas, facturas o sale.
-	private void opcionesAplicacion(Aplicacion opcion) {
+	private void opcionesAplicacion(Aplicacion opcion) throws NifInvalido, CodigoInvalido, ErrorFecha {
 		switch (opcion) {
 		case CLIENTE:
 			menuCliente();
@@ -59,6 +66,12 @@ public class Menu {
 		case FACTURAS:
 			menuFactura();
 			break;
+		case CARGAR:
+			cargar();
+			break;
+		case GUARDAR:
+			guardar();
+			break;
 		case SALIR:
 			salir();
 			break;
@@ -67,6 +80,34 @@ public class Menu {
 
 	private void salir() {
 		System.out.println("Adiós");
+	}
+	
+	private void cargar() {
+		try {
+			FileInputStream fis = new FileInputStream("datos_telefonia.bin");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			bd = (BaseDeDatos) ois.readObject();
+			ois.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Error al cargar.");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Error al cargar.");
+		} catch (IOException e) {
+			System.out.println("Error al cargar.");
+		}
+	}
+
+	private void guardar() {
+		try {
+			FileOutputStream fos = new FileOutputStream("datos_telefonia.bin");
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(bd);
+			oos.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Error al guardar.");
+		} catch (IOException e) {
+			System.out.println("Error al guardar.");
+		}
 	}
 	
 	//Menú para clientes
@@ -94,6 +135,14 @@ public class Menu {
 			break;
 		case RECUPERAR_TODOS_CLIENTES:
 			mostrarTodos();
+			break;
+		case CLIENTES_ENTRE_FECHAS:
+			try {
+				listaClientesEntreDosFechas();
+			} catch (ErrorFecha e) {
+				// TODO Auto-generated catch block
+				System.out.println("Fecha inicial posterior a la de fin.");
+			}
 			break;
 		}
 		
@@ -234,7 +283,7 @@ public class Menu {
 	
 	
 	//Menú para llamadas
-	private void menuLlamada() {
+	private void menuLlamada() throws NifInvalido {
 		System.out.println(MenuLlamadas.getMenu());
 		System.out.print("¿Qué operación desea realizar?");
 		MenuLlamadas opcion = MenuLlamadas.getOpcion(teclado.nextInt());
@@ -242,7 +291,7 @@ public class Menu {
 	}
 	
 	//Dependiendo de la opción elegida, llama a una función
-	private void opcionesMenuLlamadas(MenuLlamadas opcion) {
+	private void opcionesMenuLlamadas(MenuLlamadas opcion) throws NifInvalido {
 		switch (opcion) {
 		case NUEVA_LLAMADA:
 			altaLlamada(teclado);
@@ -250,11 +299,20 @@ public class Menu {
 		case LISTAR_LLAMADAS:
 			todasLlamadasCliente(teclado);
 			break;
+			
+		case LLAMADAS_ENTRE_FECHAS:
+			try {
+				listarLlamadasDosFechas();
+			} catch (ErrorFecha e) {
+				// TODO Auto-generated catch block
+				System.out.println("Fecha inicial posterior a la de fin.");
+			}
+			break;
 		}
 	}
 	
 	//Da de alta a una nueva llamada introduciendo el nif del cliente, número de teléfono y duración de la llamada
-	private static void altaLlamada(Scanner teclado) {
+	private static void altaLlamada(Scanner teclado) throws NifInvalido {
 		System.out.println("Nif del cliente:");
 		String nif = teclado.next();
 		System.out.println("Numero de telefono:");
@@ -266,7 +324,7 @@ public class Menu {
 	}
 
 	//Muestra todas las llamadas de un cliente introduciendo el nif
-	private static void todasLlamadasCliente(Scanner teclado) {
+	private static void todasLlamadasCliente(Scanner teclado) throws NifInvalido {
 		String nif = null;
 		System.out.println("Nif del cliente :");
 		nif = teclado.next();
@@ -324,7 +382,7 @@ public class Menu {
 	
 	
 	//Menú para facturas
-	private void menuFactura() {
+	private void menuFactura() throws NifInvalido, CodigoInvalido, ErrorFecha {
 		System.out.println(MenuFacturas.getMenu());
 		System.out.print("¿Qué operación desea realizar?");
 		MenuFacturas opcion = MenuFacturas.getOpcion(teclado.nextInt());
@@ -332,7 +390,7 @@ public class Menu {
 	}
 	
 	//Dependiendo de la opción elegida, llama a una función
-	private void opcionesMenuFacturas(MenuFacturas opcion) {
+	private void opcionesMenuFacturas(MenuFacturas opcion) throws NifInvalido, CodigoInvalido, ErrorFecha {
 		switch (opcion) {
 		case EMITIR_FACTURA:
 			emitirFactura(teclado);
@@ -343,11 +401,19 @@ public class Menu {
 		case RECUPERAR_FACTURAS_CLIENTE:
 			recuperarFacturasCliente(teclado);
 			break;
+		case FACTURAS_ENTRE_FECHAS:
+			try {
+				listarFacturasEntreDosFechas();
+			} catch (ErrorFecha e) {
+				// TODO Auto-generated catch block
+				System.out.println("Fecha inicial posterior a la de fin.");
+			}
+			break;
 		}
 	}
 
 	//Emite una factura introduciendo el nif del cliente
-	private static void emitirFactura(Scanner teclado) {
+	private static void emitirFactura(Scanner teclado) throws ErrorFecha, NifInvalido {
 		String nif = null;
 		System.out.println("Nif del cliente del que desea hacer la factura:");
 		nif = teclado.next();
@@ -355,7 +421,7 @@ public class Menu {
 	}
 
 	//Recupera una factura introduciendo el codigo de la factura
-	private static void recuperarFactura(Scanner teclado) {
+	private static void recuperarFactura(Scanner teclado) throws CodigoInvalido {
 		int codigo;
 		System.out.println("Codigo de la factura:");
 		codigo = teclado.nextInt();
@@ -363,7 +429,7 @@ public class Menu {
 	}
 
 	//Recupera todas las facturas de un cliente introduciendo el nif del cliente
-	private static void recuperarFacturasCliente(Scanner teclado) {
+	private static void recuperarFacturasCliente(Scanner teclado) throws NifInvalido {
 		String nif = null;
 		System.out.println("Nif del cliente :");
 		nif = teclado.next();

@@ -2,7 +2,8 @@ package menu;
 
 public enum MenuLlamadas {
 	NUEVA_LLAMADA("Dar de alta una llamada"),
-	LISTAR_LLAMADAS("Listar todas las llamadas de un cliente");
+	LISTAR_LLAMADAS("Listar todas las llamadas de un cliente"), 
+	LLAMADAS_ENTRE_FECHAS("Muestra las llamadas entre dos fechas");
 	
 	private String descripcion;
 
