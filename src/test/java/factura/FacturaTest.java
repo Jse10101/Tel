@@ -63,9 +63,15 @@ public class FacturaTest {
 	}
 	
 	@Test
-	public void recuperarFacturaCodigoNoExisteTest() throws CodigoInvalido {//Codigo cliente inexistente
-		Integer codigo = bd.getCodigoFactura() + 150;
-		assertEquals(false, bd.recuperarFacturaPorCodigo(codigo));
-
+	public void recuperarFacturaCodigoNoExisteTest(){//Codigo cliente inexistente
+		try {
+			Integer codigo = bd.getCodigoFactura() + 150;
+			bd.recuperarFacturaPorCodigo(codigo);
+	        fail();
+	    } 
+	    catch (Exception e) {
+	        final String expected = "El código introucido es inválido.";
+	        assertEquals(expected, e.getMessage());
+	    }
 	}
 }

@@ -30,6 +30,11 @@ import menu.MenuClientes;
 import menu.MenuFacturas;
 import menu.MenuLlamadas;
 import tarifa.Tarifa;
+import factoria.TipoTarifaEspecial;
+import factoria.FactoriaClienteParametrizada;
+import factoria.FactoriaParametrizada;
+import factoria.FactoriaTarifas;
+import factoria.TipoCliente;
 
 public class Menu {
 	private static BaseDeDatos bd;
@@ -182,6 +187,12 @@ public class Menu {
 			float precio = teclado.nextFloat();
 			Tarifa tarifa = new Tarifa(precio);
 			cliente.setTarifa(tarifa);
+			System.out.println(TipoTarifaEspecial.getMenu());
+			System.out.println("Tipo de tarifa especial: ");
+			TipoTarifaEspecial tarifaEspecial = TipoTarifaEspecial.getOpcion(teclado.nextInt());	
+			FactoriaTarifas nuevaFactoria = new FactoriaTarifas();
+			nuevaFactoria.getTarifa(tarifaEspecial, tarifa, tarifa.getPre());
+			teclado.nextLine();
 		}
 	}
 	
@@ -194,46 +205,17 @@ public class Menu {
 	
 	//Añade un nuevo cliente
 	private static void anyadirCliente(Scanner teclado) {
-		Cliente cliente = null;
-		//Pedimos todos los datos de un cliente para añadirlo
-		teclado.nextLine();
-		System.out.println("Nombre:");
-		String nombre = teclado.nextLine();
-		System.out.println("NIF:");
-		String nif = teclado.next();
-		System.out.println("Codigo postal:");
-		String cp = teclado.next();
-		System.out.println("Provincia:");
-		String provincia = teclado.next();
-		teclado.nextLine();
-		System.out.println("Poblacion:");
-		String poblacion = teclado.nextLine();
-		Direccion dir = new Direccion(cp, provincia, poblacion);
-		Calendar fecha = Calendar.getInstance();
-		System.out.println("Precio de la tarifa: ");
-		float precio = teclado.nextFloat();
-		teclado.nextLine();
-		Tarifa tarifa = new Tarifa(precio);
-		System.out.println("Correo electronico:");
-		String correo = teclado.next();
-		System.out.println("Si eres una EMPRESA, pulsa 1 \nSi eres un PARTICULAR, pulsa 2: ");
-		int tipo = teclado.nextInt();
+		Cliente cliente;
 		
-		switch (tipo) {
-		case 1:
-			//Es una empresa y no hay apellido
-			cliente = new Empresa(nombre, nif, dir, correo, fecha, tarifa);
-			break;
-			
-		case 2:
-			//Si es un particular también nos pedirá los apellidos
-			System.out.println("Apellidos:");
-			teclado.nextLine();
-			String apellidos = teclado.nextLine();
-			cliente = new Particular(nombre, nif, dir, correo, fecha, tarifa, apellidos);
-			break;
-		}
-		//Una vez tenemos al cliente como tal, lo añadimos a la lista con todos los clientes.
+		TipoCliente tipo = null;
+		System.out.println(TipoCliente.opciones());
+		System.out.print("Introduce un tipo de cliente:");
+		int  opcion = teclado.nextInt();
+		teclado.nextLine();
+		tipo = TipoCliente.enteroATipo(opcion);
+		FactoriaParametrizada fact = new FactoriaClienteParametrizada();
+		cliente = fact.getCliente(tipo,teclado);
+		
 		bd.nuevoCliente(cliente);
 	}
 	

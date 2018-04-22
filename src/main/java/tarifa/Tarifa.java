@@ -25,12 +25,16 @@ public class Tarifa implements Serializable{
 	public double getPrecio(Llamada llamada) {
 		return precio;
 	}
-
+	
+	public double getPre() {
+		return precio;
+	}
+	
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
-	
-	//ToString
+
+	@Override
 	public String toString() {
 		return "Tarifa: " + precio + "€";
 	}

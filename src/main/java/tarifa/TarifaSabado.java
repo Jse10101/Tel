@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 import llamada.Llamada;
 
-public class TarifaDomingo extends Tarifa implements Serializable{
+public class TarifaSabado extends Tarifa implements Serializable{
 	
 	/**
 	 * 
@@ -13,10 +13,10 @@ public class TarifaDomingo extends Tarifa implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Tarifa tarifa;
-	private final int dia=1;
+	private final int dia=7;
 
 	
-	public TarifaDomingo(Tarifa tarifa,double precio){
+	public TarifaSabado(Tarifa tarifa,double precio){
 		super(precio);
 		this.tarifa=tarifa;
 	}
