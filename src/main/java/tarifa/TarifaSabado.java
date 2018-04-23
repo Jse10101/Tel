@@ -13,7 +13,7 @@ public class TarifaSabado extends Tarifa implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private Tarifa tarifa;
-	private final int dia=7;
+	private final int dia=1;
 
 	
 	public TarifaSabado(Tarifa tarifa,double precio){
@@ -31,7 +31,7 @@ public class TarifaSabado extends Tarifa implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Domingo" + super.toString() + tarifa.toString() + " ";
+		return "Sabado" + super.toString() + tarifa.toString() + " ";
 	}
 	
 	public Tarifa getTarifa() {

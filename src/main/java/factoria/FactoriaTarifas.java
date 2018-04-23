@@ -8,6 +8,7 @@ public class FactoriaTarifas implements TarifaInt {
 
 	public Tarifa getTarifa(TipoTarifaEspecial tipo, Tarifa tarifaAnterior, double precio) {
 		Tarifa tarifa = null;
+		
 		switch (tipo) {
 		case NOCTURNO:
 			tarifa = new TarifaNocturna(tarifaAnterior, precio);

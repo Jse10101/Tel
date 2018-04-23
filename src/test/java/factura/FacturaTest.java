@@ -26,8 +26,15 @@ public class FacturaTest {
 		bd.addLlamada(new Llamada(987654321, Calendar.getInstance(), 10.5), clienteEmp.getNif());
 	}
 	@Test
-	public void generarFacturaNifNoExisteTest() throws ErrorFecha, NifInvalido { // Nif del cliente no existe
-		assertEquals(false, bd.generarFactura("ABCD1984"));
+	public void generarFacturaNifNoExisteTest() throws ErrorFecha{ // Nif del cliente no existe
+		try {
+			bd.generarFactura("ABCD1984");
+	        fail();
+	    } 
+	    catch (Exception e) {
+	        final String expected = "El nif introucido es inválido.";
+	        assertEquals(expected, e.getMessage());
+	    }
 	}
 	
 	@Test
@@ -37,19 +44,22 @@ public class FacturaTest {
 	
 	@Test
 	public void recuperaFacturasClienteSinFacturasTest() throws NifInvalido { // Nif del cliente sí existe pero no tiene facturas 
-		assertEquals(false, bd.recuperarFacturasCliente(clientePar.getNif()));
+		try {
+			bd.recuperarFacturasCliente(clientePar.getNif());
+		} catch (CodigoInvalido e) {
+			 final String expected = "El código introucido es inválido.";
+		       assertEquals(expected, e.getMessage());
+		}
 	}
 	
 	@Test
-	public void recuperaFacturasClienteTest() throws NifInvalido {// Nif de cliente existe y tiene facturas
-		assertEquals(false, bd.recuperarFacturasCliente(clienteEmp.getNif()));
-	}
-	
-	@Test
-	public void generarFacturaCalculaImporteTest() throws ErrorFecha, NifInvalido {//Comprobamos importe de factura
+	public void recuperaFacturasClienteTest() throws NifInvalido, CodigoInvalido, ErrorFecha {// Nif de cliente existe y tiene facturas
+		bd.addLlamada(new Llamada(123789, 7), clienteEmp.getNif());
+		bd.addLlamada(new Llamada(12789, 5), clienteEmp.getNif());
 		bd.generarFactura(clienteEmp.getNif());
-		assertEquals(561.6, bd.getListaFacturas().get((Integer) bd.getCodigoFactura() - 1).getImporte(), 0.0);
+		assertEquals(true, bd.recuperarFacturasCliente(clienteEmp.getNif()));
 	}
+	
 	@Test
 	public void generarFacturaVariasVecesTest() throws ErrorFecha, NifInvalido { // Cliente factura e intenta volver a facturar otra vez.
 		assertEquals(true, bd.generarFactura(clienteEmp.getNif()));

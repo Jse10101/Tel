@@ -32,7 +32,7 @@ public class TarifaNocturna extends Tarifa implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Noche" + super.toString() + tarifa.toString() + " ";
+		return "Nocturna" + super.toString() + tarifa.toString() + " ";
 	}
 	public Tarifa getTarifa() {
 		return tarifa;

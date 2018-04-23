@@ -17,10 +17,7 @@ import java.util.Set;
 
 import llamada.Llamada;
 import cliente.Cliente;
-import cliente.Empresa;
-import cliente.Particular;
 import datos.BaseDeDatos;
-import direccion.Direccion;
 import excepciones.CodigoInvalido;
 import excepciones.ErrorFecha;
 import excepciones.NifInvalido;
@@ -30,10 +27,8 @@ import menu.MenuClientes;
 import menu.MenuFacturas;
 import menu.MenuLlamadas;
 import tarifa.Tarifa;
-import factoria.TipoTarifaEspecial;
 import factoria.FactoriaClienteParametrizada;
 import factoria.FactoriaParametrizada;
-import factoria.FactoriaTarifas;
 import factoria.TipoCliente;
 
 public class Menu {
@@ -187,12 +182,6 @@ public class Menu {
 			float precio = teclado.nextFloat();
 			Tarifa tarifa = new Tarifa(precio);
 			cliente.setTarifa(tarifa);
-			System.out.println(TipoTarifaEspecial.getMenu());
-			System.out.println("Tipo de tarifa especial: ");
-			TipoTarifaEspecial tarifaEspecial = TipoTarifaEspecial.getOpcion(teclado.nextInt());	
-			FactoriaTarifas nuevaFactoria = new FactoriaTarifas();
-			nuevaFactoria.getTarifa(tarifaEspecial, tarifa, tarifa.getPre());
-			teclado.nextLine();
 		}
 	}
 	
@@ -411,7 +400,7 @@ public class Menu {
 	}
 
 	//Recupera todas las facturas de un cliente introduciendo el nif del cliente
-	private static void recuperarFacturasCliente(Scanner teclado) throws NifInvalido {
+	private static void recuperarFacturasCliente(Scanner teclado) throws NifInvalido, CodigoInvalido {
 		String nif = null;
 		System.out.println("Nif del cliente :");
 		nif = teclado.next();

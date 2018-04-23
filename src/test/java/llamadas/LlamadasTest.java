@@ -1,6 +1,7 @@
 package llamadas;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Calendar;
 
@@ -36,10 +37,18 @@ public class LlamadasTest {
 	}
 	
 	@Test
-	public void listaLlamadasClienteNoExisteTest() throws NifInvalido {// El cliente del cual se quieren mostrar las llamadas no existe.
-		assertEquals(false, bd.LlamadasDeUnCliente("ABCD1984"));
+	public void listaLlamadasClienteNoExisteTest() {// El cliente del cual se quieren mostrar las llamadas no existe.
+		try {
+			bd.LlamadasDeUnCliente("ABCD1984");
+	        fail();
+	    } 
+	    catch (Exception e) {
+	        final String expected = "El nif introucido es inválido.";
+	        assertEquals(expected, e.getMessage());
+	    }
+		
+		
 	}
-	
 	@Test
 	public void listaLlamadasClienteParTest() throws NifInvalido {//El cliente particular hace un par de llamadas y muestra las llamadas.
 		bd.addLlamada(new Llamada(987654321, 28), clientePar.getNif());

@@ -13,6 +13,8 @@ import entradaSalida.EntradaSalida;
 import excepciones.CodigoInvalido;
 import excepciones.ErrorFecha;
 import excepciones.NifInvalido;
+import factoria.FactoriaTarifas;
+import factoria.TipoTarifaEspecial;
 import factura.Factura;
 import fecha.FechaInt;
 import llamada.Llamada;
@@ -149,7 +151,7 @@ public class BaseDeDatos implements Serializable{
 	}
 
 	//Muestra facturas de un cliente con el nif
-	public boolean recuperarFacturasCliente(String nif) throws NifInvalido {
+	public boolean recuperarFacturasCliente(String nif) throws NifInvalido, CodigoInvalido {
 		listaFacturasCliente = new ArrayList<Factura>();
 		Cliente cliente = listaClientes.get(nif);
 		if (cliente == null) {
@@ -159,10 +161,6 @@ public class BaseDeDatos implements Serializable{
 			//El cliente sí existe
 			ArrayList<Integer> facturas = cliente.getListaCodigoFacturas();
 			if (!facturas.isEmpty()) {
-				//El cliente no tiene facturas.
-				System.out.println("Cliente sin facturas.");
-				return false;
-			} else {
 				//Si la lista de facturas no está vacía, las muestra una a una recorriéndola y las guarda en una nueva lista
 				System.out.println("Facturas: ");
 				for (Integer contador : facturas) {
@@ -170,6 +168,8 @@ public class BaseDeDatos implements Serializable{
 					System.out.println(listaFacturas.get(contador).toString());
 				}
 				return true;
+			} else {
+				return false;
 			}
 
 		}
@@ -194,7 +194,33 @@ public class BaseDeDatos implements Serializable{
 				} else {
 					//Si hay llamadas, calculamos el precio de todas las llamadas
 					for (Llamada llamada : listaLlamadas) {
-						importe += llamada.getDuracion() * cliente.getTarifa().getPrecio(llamada);
+						//AQUI ESTAN LOS PRECIOS DE LAS NUEVAS TARIFAS
+						FactoriaTarifas nuevaFactoria = new FactoriaTarifas();
+						TipoTarifaEspecial opcion0 = TipoTarifaEspecial.getOpcion(0);
+						Tarifa nocturna = nuevaFactoria.getTarifa(opcion0, cliente.getTarifa(), 0.11);
+						double precio1 = nocturna.getPrecio(llamada);
+						
+						TipoTarifaEspecial opcion1 = TipoTarifaEspecial.getOpcion(1);
+						Tarifa sabado = nuevaFactoria.getTarifa(opcion1, nocturna, 0.14);
+						double precio2 = sabado.getPrecio(llamada);
+						double primerMenor;
+						if(precio1 < precio2) {
+							primerMenor = precio1;
+						}else {
+							primerMenor = precio2;
+						}
+						
+						TipoTarifaEspecial opcion2 = TipoTarifaEspecial.getOpcion(2);
+						Tarifa domingo = nuevaFactoria.getTarifa(opcion2, sabado, 0.0);
+						double precio3 = domingo.getPrecio(llamada);
+						double precioFinal;
+						if(primerMenor < precio3) {
+							precioFinal = primerMenor;
+						}else{
+							precioFinal = precio3;
+						}
+						
+						importe += llamada.getDuracion() * precioFinal;
 					}
 					//Facturamos
 					Calendar fechaFacturacion = Calendar.getInstance();
@@ -218,7 +244,32 @@ public class BaseDeDatos implements Serializable{
 					for (Llamada llamada : llamadas) {
 						if (cliente.getFechaUltimaFactura().compareTo(llamada.getFecha()) < 0) {
 							LlamadasParaFacturar = true;
-							importe += llamada.getDuracion() * cliente.getTarifa().getPrecio(llamada);
+							FactoriaTarifas nuevaFactoria = new FactoriaTarifas();
+							TipoTarifaEspecial opcion0 = TipoTarifaEspecial.getOpcion(0);
+							Tarifa nocturna = nuevaFactoria.getTarifa(opcion0, cliente.getTarifa(), 0.11);
+							double precio1 = nocturna.getPrecio(llamada);
+							
+							TipoTarifaEspecial opcion1 = TipoTarifaEspecial.getOpcion(1);
+							Tarifa sabado = nuevaFactoria.getTarifa(opcion1, nocturna, 0.14);
+							double precio2 = sabado.getPrecio(llamada);
+							double primerMenor;
+							if(precio1 < precio2) {
+								primerMenor = precio1;
+							}else {
+								primerMenor = precio2;
+							}
+							
+							TipoTarifaEspecial opcion2 = TipoTarifaEspecial.getOpcion(2);
+							Tarifa domingo = nuevaFactoria.getTarifa(opcion2, sabado, 0.0);
+							double precio3 = domingo.getPrecio(llamada);
+							double precioFinal;
+							if(primerMenor < precio3) {
+								precioFinal = primerMenor;
+							}else{
+								precioFinal = precio3;
+							}
+							
+							importe += llamada.getDuracion() * precioFinal;
 						}
 					}
 					//Si hay llamadas para facturar, facturamos como antes

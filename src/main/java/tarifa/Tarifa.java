@@ -26,10 +26,6 @@ public class Tarifa implements Serializable{
 		return precio;
 	}
 	
-	public double getPre() {
-		return precio;
-	}
-	
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
