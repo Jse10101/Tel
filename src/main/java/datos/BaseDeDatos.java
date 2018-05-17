@@ -45,7 +45,7 @@ public class BaseDeDatos implements Serializable{
 	public HashMap<Integer, Factura> getListaFacturas() {
 		return listaFacturas;
 	}
-
+	
 	public void setListaFacturas(HashMap<Integer, Factura> listaFacturas) {
 		this.listaFacturas = listaFacturas;
 	}
@@ -325,7 +325,11 @@ public class BaseDeDatos implements Serializable{
 		return listaFacturasCliente;
 	}
 
-	public List<Llamada> getListLlamdasCliente() {
+	public void setFacturascliente(List<Factura> listaFacturasCliente) {
+		this.listaFacturasCliente = listaFacturasCliente;
+	}
+	
+	public List<Llamada> getListLlamadasCliente() {
 		return listaLlamadasCliente;
 	}
 
