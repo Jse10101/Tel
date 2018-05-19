@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import factoria.FactoriaTarifas;
-import factoria.TipoTarifaEspecial;
+import factoria.TipoTarifaDia;
+import factoria.TipoTarifaHorario;
 import cliente.Cliente;
 import cliente.Empresa;
 import cliente.Particular;
@@ -30,7 +31,6 @@ public class Controlador implements ControladorInt {
 	private VistaInt vista;
 
 	public boolean generarFactura(String nif) throws ErrorFecha, NifInvalido {
-		
 		System.out.println("Soy el controlador  :" + nif);
 		boolean result = modelo.generarFactura(nif);
 		return result;
@@ -40,7 +40,6 @@ public class Controlador implements ControladorInt {
 	public void setVista(VistaInt vista) {
 		// TODO Auto-generated method stub
 		this.vista = vista;
-
 	}
 
 	public void setModelo(ModeloInt modelo) {
@@ -57,16 +56,25 @@ public class Controlador implements ControladorInt {
 	}
 
 	@Override
-	public boolean recuperarDatosFactura(int codigo) throws CodigoInvalido {
+	public boolean datosFactura(int codigo) throws CodigoInvalido {
 		// TODO Auto-generated method stub
-		boolean result = modelo.recuperarDatosFactura(codigo);
+		boolean result = modelo.recuperarFacturaPorCodigo(codigo);
 		return result;
 	}
 
 	@Override
-	public boolean recuperarFacurasCliente(String nif) {
+	public boolean facurasCliente(String nif) {
 		// TODO Auto-generated method stub
-		boolean result = modelo.recuperarFacturasCliente(nif);
+		boolean result = false;
+		try {
+			result = modelo.recuperarFacturasCliente(nif);
+		} catch (NifInvalido e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodigoInvalido e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return result;
 	}
 
@@ -125,39 +133,41 @@ public class Controlador implements ControladorInt {
 	}
 
 	@Override
-	public boolean nuevoCliente(String nombre, String apellidos, String dni, String pc, String prov, String pueblo,
-			Float tarifaB, Float tarifaE, String correo, int esp) {
+	public boolean nuevoCliente(String name, String apellidos, String dni, String pc, String prov, String pueblo,
+			double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario) {
 		FactoriaTarifas factoriaN = new FactoriaTarifas();
 		Tarifa basica = new Tarifa(tarifaB);
-		Tarifa tarifaEspecial = factoriaN.getTarifa(TipoTarifaEspecial.getOpcion(esp), basica, tarifaE);
+		Tarifa segunDia = factoriaN.getTarifa(TipoTarifaDia.getOpcion(dia), basica, tarifaD);
+		Tarifa segunHorario = factoriaN.getTarifa(TipoTarifaHorario.getOpcion(horario), segunDia, tarifaH);
 
 		Direccion dir = new Direccion(pc, prov, pueblo);
 
 		Calendar fecha = Calendar.getInstance();
 
-		Cliente cliente = new Particular(nombre, dni, dir, correo, fecha, tarifaEspecial, apellidos);
+		Cliente cliente = new Particular(name, dni, dir, correo, fecha, segunHorario, apellidos);
 
 		boolean result = modelo.nuevoCliente(cliente);
 		return result;
 	}
 
 	@Override
-	public boolean nuevaEmpresa(String name, String dni, String pc, String prov, String pueblo, Float tarifaB,
-			Float tarifaE, String correo, int esp) {
+	public boolean nuevaEmpresa(String name, String dni, String pc, String prov, String pueblo,
+			double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario) {
 		FactoriaTarifas factoriaN = new FactoriaTarifas();
 		Tarifa basica = new Tarifa(tarifaB);
-		Tarifa tarifaEspecial = factoriaN.getTarifa(TipoTarifaEspecial.getOpcion(esp), basica, tarifaE);
+		Tarifa segunDia = factoriaN.getTarifa(TipoTarifaDia.getOpcion(dia), basica, tarifaD);
+		Tarifa segunHorario = factoriaN.getTarifa(TipoTarifaHorario.getOpcion(horario), segunDia, tarifaH);
 
 		Direccion dir = new Direccion(pc, prov, pueblo);
 
 		Calendar fecha = Calendar.getInstance();
 
-		Cliente cliente = new Empresa(name, dni, dir, correo, fecha, tarifaEspecial);
+		Cliente cliente = new Empresa(name, dni, dir, correo, fecha, segunHorario);
 
 		boolean result = modelo.nuevoCliente(cliente);
 		return result;
 	}
-
+	
 	@Override
 	public boolean borrarCliente(String niff) {
 		boolean result = modelo.borrarCliente(niff);
@@ -165,12 +175,13 @@ public class Controlador implements ControladorInt {
 	}
 
 	@Override
-	public boolean cambiarTarifa(String dni, Float tarifaB, Float tarifaE, int esp) {
-		FactoriaTarifas factoriaN = new FactoriaTarifas();
+	public boolean cambiarTarifa(String dni, double tarifaB, double tarifaD, double tarifaH, int dia, int horario) {
+		FactoriaTarifas factoriaH = new FactoriaTarifas();
 		Tarifa basica = new Tarifa(tarifaB);
-		Tarifa tarifaEspecial = factoriaN.getTarifa(TipoTarifaEspecial.getOpcion(esp), basica, tarifaE);
+		Tarifa segunDia = factoriaH.getTarifa(TipoTarifaDia.getOpcion(dia), basica, tarifaD);
+		Tarifa segunHora = factoriaH.getTarifa(TipoTarifaHorario.getOpcion(horario), segunDia, tarifaH);
 
-		Boolean result = modelo.cambiarTarifa(dni, tarifaEspecial);
+		Boolean result = modelo.cambiarTarifa(dni, segunHora);
 		return result;
 	}
 

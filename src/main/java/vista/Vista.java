@@ -35,13 +35,16 @@ import datos.BaseDeDatos;
 import direccion.Direccion;
 import factura.Factura;
 import entradaSalida.EntradaSalida;
+import excepciones.CodigoInvalido;
+import excepciones.ErrorFecha;
+import excepciones.NifInvalido;
 import llamada.Llamada;
 import modelo.ModeloInt;
 import tarifa.Tarifa;
 
 public class Vista implements VistaInt {
 
-	String[] dias = { "Sabado", "Domingo" }, horas = { "Manyana", "Tarde", "Noche" };
+	String[] dias = { "Sabado", "Domingo" }, horas = { "Manyana", "Noche" };
 	JComboBox dia = new JComboBox(dias), hora = new JComboBox(horas);
 
 	JTextField nif = new JTextField(20), nombre = new JTextField(20), cp = new JTextField(20),
@@ -94,14 +97,11 @@ public class Vista implements VistaInt {
 	}
 
 	private void anyadeMenu() {
-		JMenuBar barra = new JMenuBar(); // Creamos el objeto menuBar para
-		// anyadir una barra de menus
+		JMenuBar barra = new JMenuBar(); 
 		JMenu menuCliente = new JMenu("Opciones cliente");
 		MenuClienteListener listener = new MenuClienteListener();
-
-		// Anyadimos tres items de menu, todos siguen el mismo esquema de
-		// creacion.
-		// Opcion de nueva partida
+		
+		
 		JMenu submenu = new JMenu("Dar de alta un nuevo cliente");
 
 		JMenuItem nuevoCliente = new JMenuItem();
@@ -254,7 +254,7 @@ public class Vista implements VistaInt {
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no añadir .");
+			cancelar.setToolTipText("Salir y no anyadir .");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -287,16 +287,16 @@ public class Vista implements VistaInt {
 					i.setTime(fecha_date);
 				} catch (ParseException eini) {
 					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("fecha mal");
-					ventanaErrores("fechas mal");
+					System.out.println("Fecha mal");
+					ventanaErrores("Fechas mal");
 				}
 				try {
 					Date fecha_date = sdf.parse(fi);
 					f.setTime(fecha_date);
 				} catch (ParseException efi) {
 					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("fecha mal");
-					ventanaErrores("fecha mal");
+					System.out.println("Fecha mal");
+					ventanaErrores("Fecha mal");
 				}
 
 				try {
@@ -304,13 +304,13 @@ public class Vista implements VistaInt {
 					llam = controlador.recuperarLlamadasFechas(i, f, niff);
 				} catch (Exception e2) {
 					// TODO: handle exception
-					System.out.println("fecha inicio es menor que fecha fin?");
-					ventanaErrores("fecha inicio es menor que fecha fin?");
+					System.out.println("¿Fecha inicio es menor que fecha fin?");
+					ventanaErrores("¿Fecha inicio es menor que fecha fin?");
 				}
 
 				if (llam == null) {
-					System.out.println("no se pudo listar porque el cliente o no existe o no tiene facturas");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo listar porque el cliente o no existe o no tiene facturas");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 
 					form.setVisible(false);
@@ -343,7 +343,7 @@ public class Vista implements VistaInt {
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no añadir .");
+			cancelar.setToolTipText("Salir y no anyadir .");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -365,10 +365,16 @@ public class Vista implements VistaInt {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
-				System.out.println("recuperando factturas cliente");
+				System.out.println("recuperando facturas cliente");
 				String niff = nif.getText();
 
-				boolean result = controlador.listLlamdasCliente(niff);
+				boolean result = false;
+				try {
+					result = controlador.listLlamdasCliente(niff);
+				} catch (NifInvalido e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if (!result) {
 					System.out.println("no se pudo crear la factura");
 					ventanaErrores("NO se ha podido realizar la operacion. ");
@@ -404,12 +410,12 @@ public class Vista implements VistaInt {
 			contenedor.add(tiempo);
 
 			AltaLlamada listener = new AltaLlamada();
-			JButton boton = new JButton("añadir llamada");
+			JButton boton = new JButton("anyadir llamada");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no añadir .");
+			cancelar.setToolTipText("Salir y no anyadir .");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -449,7 +455,12 @@ public class Vista implements VistaInt {
 
 			if (tiempoo >= 0.0 && tell >= 0) {
 				System.out.println("creando");
-				result = controlador.altaLlamada(niff, tell, tiempoo);
+				try {
+					result = controlador.altaLlamada(niff, tell, tiempoo);
+				} catch (NifInvalido e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			if (!result) {
 				System.out.println("no se pudo crear la factura");
@@ -475,7 +486,7 @@ public class Vista implements VistaInt {
 
 	private void mostrarIntro() {
 		Container contenedor = frame.getContentPane();
-		texto.setText("Bienvenido a la apicación");
+		texto.setText("Bienvenido a la apicacion");
 		contenedor.add(texto);
 		frame.pack();
 		frame.setVisible(true);
@@ -689,10 +700,10 @@ public class Vista implements VistaInt {
 					form.dispose();
 				}
 			});
-			text1.setText("Tarifa b�sica: ");
-			text2.setText("Tarifa seg�n dia: ");
-			text3.setText("Tarifa seg�n hora: ");
-			text4.setText("Correo electr�nico: ");
+			text1.setText("Tarifa basica: ");
+			text2.setText("Tarifa segun dia: ");
+			text3.setText("Tarifa segun hora: ");
+			text4.setText("Correo electronico: ");
 
 			form.setTitle("Nuevo cliente");
 			contenedor.setLayout(new FlowLayout());
@@ -745,7 +756,7 @@ public class Vista implements VistaInt {
 			JButton boton1 = new JButton(), boton2 = new JButton();
 			boton1.setText("ACEPTAR");
 			boton2.setText("CANCELAR");
-			boton2.setToolTipText("Salir y no a�adir cliente.");
+			boton2.setToolTipText("Salir y no anyadir cliente.");
 			boton2.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -754,10 +765,10 @@ public class Vista implements VistaInt {
 					form.dispose();
 				}
 			});
-			text1.setText("Tarifa b�sica: ");
-			text2.setText("Tarifa seg�n dia: ");
-			text3.setText("Tarifa seg�n hora: ");
-			text4.setText("Correo electr�nico: ");
+			text1.setText("Tarifa basica: ");
+			text2.setText("Tarifa segun dia: ");
+			text3.setText("Tarifa segun hora: ");
+			text4.setText("Correo electronico: ");
 			text5.setText("Apellidos: ");
 
 			form.setTitle("Nuevo cliente");
@@ -821,10 +832,9 @@ public class Vista implements VistaInt {
 				Float tarifaH = Float.parseFloat(text3b.getText());
 				String correo = text4b.getText();
 				int opcionDia = dia.getSelectedIndex();
-				int opcionHora = hora.getSelectedIndex();
-				Boolean result = controlador.nuevoCliente(name, apellidos, dni, pc, prov, pueblo, tarifaB, tarifaD,
-						tarifaH, correo, opcionDia, opcionHora);
-
+				int opcionHorario = hora.getSelectedIndex();
+				Boolean result = controlador.nuevoCliente(name, apellidos, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
+						 correo, opcionDia, opcionHorario);
 				if (!result) {
 					System.out.println("no se pudo crear la factura");
 					ventanaErrores("NO se ha podido realizar la operacion. ");
@@ -851,11 +861,9 @@ public class Vista implements VistaInt {
 				Float tarifaH = Float.parseFloat(text3b.getText());
 				String correo = text4b.getText();
 				int opcionDia = dia.getSelectedIndex();
-				int opcionHora = hora.getSelectedIndex();
-
+				int opcionHorario = hora.getSelectedIndex();
 				Boolean result = controlador.nuevaEmpresa(name, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
-						correo, opcionDia, opcionHora);
-
+						 correo, opcionDia, opcionHorario);
 				if (!result) {
 					System.out.println("no se pudo crear la factura");
 					ventanaErrores("NO se ha podido realizar la operacion. ");
@@ -885,7 +893,7 @@ public class Vista implements VistaInt {
 					form.dispose();
 				}
 			});
-			text1.setText("Tarifa b�sica: ");
+			text1.setText("Tarifa basica: ");
 
 			form.setTitle("Cambiar tarifa");
 			contenedor.setLayout(new FlowLayout());
@@ -1098,9 +1106,8 @@ public class Vista implements VistaInt {
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no añadir .");
+			cancelar.setToolTipText("Salir y no anyadir .");
 			cancelar.addActionListener(new ActionListener() {
-
 				public void actionPerformed(ActionEvent e) {
 
 					form.setVisible(false);
@@ -1185,7 +1192,7 @@ public class Vista implements VistaInt {
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no añadir .");
+			cancelar.setToolTipText("Salir y no anyadir .");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1210,14 +1217,14 @@ public class Vista implements VistaInt {
 				System.out.println("recuperando factturas cliente");
 				String niff = nif.getText();
 
-				boolean result = controlador.recuperarFacurasCliente(niff);
+				boolean result = controlador.facurasCliente(niff);
 				if (!result) {
-					System.out.println("no se pudo crear la factura");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo crear la factura");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 
 					form.setVisible(false);
-					List<Factura> facturas = modelo.getFacturascliente();
+					List<Factura> facturas = modelo.getFacturasCliente();
 					String fact = "<html><body>";
 					for (Factura factura : facturas) {
 						fact += factura.toString();
@@ -1247,7 +1254,7 @@ public class Vista implements VistaInt {
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no añadir .");
+			cancelar.setToolTipText("Salir y no anyadir .");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1269,17 +1276,23 @@ public class Vista implements VistaInt {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
-				int idFact = -1;
+				int codigo = -1;
 				System.out.println("recuperando fact");
 				try {
 
-					idFact = Integer.parseInt(idFactura.getText());
+					codigo = Integer.parseInt(idFactura.getText());
 				} catch (Exception e2) {
 					// TODO: handle exception
 					System.out.println("introduce un numero");
 					ventanaErrores("introduce un numero. ");
 				}
-				boolean result = controlador.recuperarDatosFactura(idFact);
+				boolean result = false;
+				try {
+					result = controlador.datosFactura(codigo);
+				} catch (CodigoInvalido e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if (!result) {
 					System.out.println("no se pudo crear la factura");
 					ventanaErrores("NO se ha podido realizar la operacion. ");
@@ -1308,7 +1321,7 @@ public class Vista implements VistaInt {
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no añadir .");
+			cancelar.setToolTipText("Salir y no anyadir .");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1335,7 +1348,16 @@ public class Vista implements VistaInt {
 				// TODO Auto-generated method stub
 				System.out.println("generando fact");
 				String niff = nif.getText();
-				boolean result = controlador.generarFactura(niff);
+				boolean result = false;
+				try {
+					result = controlador.generarFactura(niff);
+				} catch (ErrorFecha e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NifInvalido e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if (!result) {
 					System.out.println("no se pudo crear la factura");
 					ventanaErrores("NO se ha podido realizar la operacion. ");

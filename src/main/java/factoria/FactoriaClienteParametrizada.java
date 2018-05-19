@@ -13,6 +13,7 @@ public class FactoriaClienteParametrizada implements FactoriaParametrizada {
 	public Cliente getCliente(TipoCliente tipo,Scanner teclado) {
 		
 		String apellidos = null;
+		FactoriaTarifas fact = new FactoriaTarifas();
 		
 		System.out.println("Nombre:");
 		String nombre = teclado.nextLine();
@@ -26,10 +27,27 @@ public class FactoriaClienteParametrizada implements FactoriaParametrizada {
 		String poblacion = teclado.nextLine();
 		Direccion direccion = new Direccion(codigopostal, provincia, poblacion);
 		Calendar fecha = Calendar.getInstance();
-		System.out.println("Precio de la tarifa: ");
+		System.out.println("Precio de la tarifa basica: ");
 		float precio = teclado.nextFloat();
 		teclado.nextLine();
-		Tarifa tarifa = new Tarifa(precio);
+		Tarifa tarifaB = new Tarifa(precio);
+		System.out.println(TipoTarifaDia.getMenu());
+		System.out.println("Tipo de tarifa dependiendo de el dia: ");
+		TipoTarifaDia opcion = TipoTarifaDia.getOpcion(teclado.nextInt());
+		
+		System.out.println("Precio de la tarifa S/D: ");
+		float precio1 = teclado.nextFloat();
+		teclado.nextLine();
+		
+		Tarifa tarifaDia = fact.getTarifa(opcion, tarifaB, precio1);
+		System.out.println(TipoTarifaHorario.getMenu());
+		System.out.println("Tipo de tarifa dependiendo de  la hora : ");
+		TipoTarifaHorario opcion1 = TipoTarifaHorario.getOpcion(teclado.nextInt());
+		System.out.println("Precio de la tarifa Manyana/Noche: ");
+		float precio2 = teclado.nextFloat();
+		teclado.nextLine();
+		Tarifa tarifaBarata = fact.getTarifa(opcion1, tarifaDia, precio2);
+		
 		System.out.println("Correo electronico:");
 		String correo = teclado.nextLine();
 	Cliente cliente = null;
@@ -38,11 +56,11 @@ public class FactoriaClienteParametrizada implements FactoriaParametrizada {
 			
 			System.out.println("Apellidos:");
 			apellidos = teclado.nextLine();
-			cliente = new Particular(nombre, nif, direccion, correo, fecha, tarifa, apellidos);
+			cliente = new Particular(nombre, nif, direccion, correo, fecha, tarifaBarata, apellidos);
 			break;
 		case EMPRESA:
 			
-			cliente = new Empresa(nombre, nif, direccion, correo, fecha, tarifa);
+			cliente = new Empresa(nombre, nif, direccion, correo, fecha, tarifaBarata);
 			break;
 		}
 		

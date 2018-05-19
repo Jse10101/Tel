@@ -26,9 +26,9 @@ public interface ControladorInt {
 
 	void setModelo(ModeloInt modelo);
 
-	boolean recuperarDatosFactura(int id) throws CodigoInvalido;
+	boolean datosFactura(int codigo) throws CodigoInvalido;
 
-	boolean recuperarFacurasCliente(String nif);
+	boolean facurasCliente(String nif);
 
 	List<Factura> recuperarFactFechas(Calendar i, Calendar f, String NIF) throws ErrorFecha;
 
@@ -39,14 +39,15 @@ public interface ControladorInt {
 	List<Llamada> recuperarLlamadasFechas(Calendar i, Calendar f, String NIF) throws ErrorFecha;
 
 	boolean nuevoCliente(String nombre, String apellidos, String dni, String pc, String prov, String pueblo,
-			Float tarifaB, Float tarifaE, String correo, int opcionEsp);
+			double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario);
 
-	boolean nuevaEmpresa(String nombre, String dni, String pc, String prov, String pueblo, Float tarifaB, Float tarifaE, String correo, int esp);
+	boolean nuevaEmpresa(String nombre, String dni, String pc, String prov, String pueblo,
+			double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario);
 
 	boolean borrarCliente(String niff);
 
-	boolean cambiarTarifa(String dni, Float tarifaB, Float tarifaE, int esp);
-
+	boolean cambiarTarifa(String dni, double tarifaB, double tarifaD, double tarifaH, int dia, int horario);
+	
 	Cliente mostrarCliente(String niff);
 
 	ArrayList<Cliente> mostrarTodos();
