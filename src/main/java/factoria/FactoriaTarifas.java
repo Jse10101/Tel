@@ -1,6 +1,5 @@
 package factoria;
 
-import java.util.Scanner;
 
 import tarifa.Tarifa;
 import tarifa.TarifaDomingo;
@@ -14,11 +13,9 @@ public class FactoriaTarifas implements TarifaInt {
 
 	@Override
 	public Tarifa getTarifa(TipoTarifaHorario tipo, Tarifa tarifaAnterior, double precio) {
-		@SuppressWarnings("resource")
-		Scanner scanner = new Scanner(System.in);
 		Tarifa tarifa = null;
-		switch (tipo) {
 		
+		switch (tipo) {
 		case MANYANA:
 			tarifa = new TarifaManyana(tarifaAnterior, precio);
 			break;
@@ -28,13 +25,12 @@ public class FactoriaTarifas implements TarifaInt {
 		}
 		return tarifa;
 	}
+	
 	@Override
 	public Tarifa getTarifa(TipoTarifaDia tipo, Tarifa tarifaAnterior, double precio) {
-		@SuppressWarnings("resource")
-		Scanner scanner = new Scanner(System.in);
 		Tarifa tarifa = null;
+		
 		switch (tipo) {
-
 		case SABADO:
 			tarifa = new TarifaSabado(tarifaAnterior, precio);
 			break;

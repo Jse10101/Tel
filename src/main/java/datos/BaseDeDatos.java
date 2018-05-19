@@ -13,8 +13,6 @@ import entradaSalida.EntradaSalida;
 import excepciones.CodigoInvalido;
 import excepciones.ErrorFecha;
 import excepciones.NifInvalido;
-import factoria.FactoriaTarifas;
-import factoria.TipoTarifaEspecial;
 import factura.Factura;
 import fecha.FechaInt;
 import llamada.Llamada;
@@ -175,7 +173,6 @@ public class BaseDeDatos implements Serializable{
 	}
 	
 	//Genera una nueva factura
-	//Genera una nueva factura
 	public boolean generarFactura(String nif) throws ErrorFecha, NifInvalido {
 		Cliente cliente = listaClientes.get(nif);
 		Boolean LlamadasParaFacturar = false;
@@ -241,125 +238,6 @@ public class BaseDeDatos implements Serializable{
 			}
 		}
 	}
-	
-	
-	
-	/*public boolean generarFactura(String nif) throws ErrorFecha, NifInvalido {
-		Cliente cliente = listaClientes.get(nif);
-		Boolean LlamadasParaFacturar = false;
-		double importe = 0.0;
-		if (cliente == null) {
-			//El cliente no existe
-			throw new NifInvalido();
-		} else {
-			//El cliente sí existe
-			ArrayList<Integer> listCodigoFacturas = cliente.getListaCodigoFacturas();
-			if (listCodigoFacturas.isEmpty()) { //Cliente sin facturas, facturamos sus llamadas.
-				ArrayList<Llamada> listaLlamadas = cliente.getListaLlamadas();
-				if (listaLlamadas.isEmpty()) {	//La lista de llamadas está vacía
-					System.out.println("No hay llamadas.");
-					return false;
-				} else {
-					//Si hay llamadas, calculamos el precio de todas las llamadas
-					for (Llamada llamada : listaLlamadas) {
-						//AQUI ESTAN LOS PRECIOS DE LAS NUEVAS TARIFAS
-						FactoriaTarifas nuevaFactoria = new FactoriaTarifas();
-						TipoTarifaEspecial opcion0 = TipoTarifaEspecial.getOpcion(0);
-						Tarifa nocturna = nuevaFactoria.getTarifa(opcion0, cliente.getTarifa(), 0.11);
-						double precio1 = nocturna.getPrecio(llamada);
-						
-						TipoTarifaEspecial opcion1 = TipoTarifaEspecial.getOpcion(1);
-						Tarifa sabado = nuevaFactoria.getTarifa(opcion1, nocturna, 0.14);
-						double precio2 = sabado.getPrecio(llamada);
-						double primerMenor;
-						if(precio1 < precio2) {
-							primerMenor = precio1;
-						}else {
-							primerMenor = precio2;
-						}
-						
-						TipoTarifaEspecial opcion2 = TipoTarifaEspecial.getOpcion(2);
-						Tarifa domingo = nuevaFactoria.getTarifa(opcion2, sabado, 0.0);
-						double precio3 = domingo.getPrecio(llamada);
-						double precioFinal;
-						if(primerMenor < precio3) {
-							precioFinal = primerMenor;
-						}else{
-							precioFinal = precio3;
-						}
-						
-						importe += llamada.getDuracion() * precioFinal;
-					}
-					//Facturamos
-					Calendar fechaFacturacion = Calendar.getInstance();
-					if(cliente.getFecha().after(fechaFacturacion))
-						throw new ErrorFecha();
-					Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechaFacturacion, fechaFacturacion, cliente.getTarifa(), importe);
-					cliente.getListaCodigoFacturas().add(factura.getCodigo());
-					listaFacturas.put(factura.getCodigo(), factura);
-					incrementaCodigoFactura();
-					cliente.setFechaUltimaFactura(fechaFacturacion);
-					System.out.println("Facturado.");
-					return true;
-				}
-			} else { //El cliente tiene facturas anteriores
-				ArrayList<Llamada> llamadas = cliente.getListaLlamadas();
-				//Si no tiene llamadas
-				if (llamadas.isEmpty()) {
-					System.out.println("Sin llamadas que facturar.");
-					return false;
-				} else { // Facturamos todas las llamadas desde la última fecha facturada
-					for (Llamada llamada : llamadas) {
-						if (cliente.getFechaUltimaFactura().compareTo(llamada.getFecha()) < 0) {
-							LlamadasParaFacturar = true;
-							FactoriaTarifas nuevaFactoria = new FactoriaTarifas();
-							TipoTarifaEspecial opcion0 = TipoTarifaEspecial.getOpcion(0);
-							Tarifa nocturna = nuevaFactoria.getTarifa(opcion0, cliente.getTarifa(), 0.11);
-							double precio1 = nocturna.getPrecio(llamada);
-							
-							TipoTarifaEspecial opcion1 = TipoTarifaEspecial.getOpcion(1);
-							Tarifa sabado = nuevaFactoria.getTarifa(opcion1, nocturna, 0.14);
-							double precio2 = sabado.getPrecio(llamada);
-							double primerMenor;
-							if(precio1 < precio2) {
-								primerMenor = precio1;
-							}else {
-								primerMenor = precio2;
-							}
-							
-							TipoTarifaEspecial opcion2 = TipoTarifaEspecial.getOpcion(2);
-							Tarifa domingo = nuevaFactoria.getTarifa(opcion2, sabado, 0.0);
-							double precio3 = domingo.getPrecio(llamada);
-							double precioFinal;
-							if(primerMenor < precio3) {
-								precioFinal = primerMenor;
-							}else{
-								precioFinal = precio3;
-							}
-							
-							importe += llamada.getDuracion() * precioFinal;
-						}
-					}
-					//Si hay llamadas para facturar, facturamos como antes
-					if (LlamadasParaFacturar) {
-						Calendar fechaFacturacion = Calendar.getInstance();
-						Factura factura = new Factura(getCodigoFactura(), cliente.getFecha(), fechaFacturacion, fechaFacturacion, cliente.getTarifa(), importe);
-						cliente.getListaCodigoFacturas().add(factura.getCodigo());
-						cliente.setFechaUltimaFactura(fechaFacturacion);
-						incrementaCodigoFactura();
-						listaFacturas.put(factura.getCodigo(), factura);
-						System.out.println("Facturado.");
-						return true;
-					} else {
-						//Si no, mostramos por pantalla que no hay llamadas
-						System.out.println("Sin llamadas que facturar.");
-						return false;
-					}
-
-				}
-			}
-		}
-	}*/
 	
 	// ENTREGA 2 EN CONSTRUCCION
 	public <T extends FechaInt> ArrayList <T> recuperaEntreFechas(ArrayList <T> conjunto, Calendar inicio, Calendar fin ) 

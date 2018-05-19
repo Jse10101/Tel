@@ -11,8 +11,8 @@ public class TarifaManyana extends Tarifa implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Tarifa tarifa;
-	private final int inicio=8;
-	 private final  int fin=12;
+	private final int inicio=7;
+	 private final  int fin=11;
 	
 	public TarifaManyana(Tarifa tarifa,double precio){
 		super(precio);
@@ -23,12 +23,11 @@ public class TarifaManyana extends Tarifa implements Serializable{
 	public double getPrecio(Llamada llamada){
 		
 		
-	if (llamada.getFecha().get(Calendar.HOUR_OF_DAY)<fin  || llamada.getFecha().get(Calendar.HOUR_OF_DAY)>=inicio ){
-			
+	if (llamada.getFecha().get(Calendar.HOUR_OF_DAY)<=fin  && llamada.getFecha().get(Calendar.HOUR_OF_DAY)>=inicio ){
 			return (Math.min(super.getPrecio(llamada),tarifa.getPrecio(llamada)));
 		}
 		
-	    return tarifa.getPrecio(llamada);
+	return tarifa.getPrecio(llamada);
 	}
 	
 	@Override

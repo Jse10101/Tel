@@ -4,7 +4,6 @@ import javax.swing.SwingUtilities;
 
 import controlador.Controlador;
 import controlador.ControladorInt;
-import datos.BaseDeDatos;
 import modelo.GestorModelo;
 import modelo.ModeloInt;
 
@@ -17,13 +16,9 @@ public class Ejecuta {
 			public void run() {
 				VistaInt vista = (VistaInt) new Vista();
 				 
-				
 				ModeloInt modelo = new GestorModelo();
 				
-				
 				ControladorInt controlador = new Controlador();
-				
-			
 				
 				 ((Vista) vista).setControlador(controlador);
 				vista.setModelo(modelo);

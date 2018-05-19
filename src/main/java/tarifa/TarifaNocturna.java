@@ -12,7 +12,7 @@ public class TarifaNocturna extends Tarifa implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Tarifa tarifa;
 	private final int inicio=21;
-	 private final  int fin=8;
+	 private final  int fin=5;
 	
 	public TarifaNocturna(Tarifa tarifa,double precio){
 		super(precio);
@@ -24,7 +24,6 @@ public class TarifaNocturna extends Tarifa implements Serializable{
 		
 		
 	if (llamada.getFecha().get(Calendar.HOUR_OF_DAY)<fin  || llamada.getFecha().get(Calendar.HOUR_OF_DAY)>=inicio ){
-			
 			return (Math.min(super.getPrecio(llamada),tarifa.getPrecio(llamada)));
 		}
 		

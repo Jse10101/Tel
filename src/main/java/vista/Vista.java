@@ -5,14 +5,12 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.EOFException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,27 +23,20 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.MenuListener;
 
 import cliente.Cliente;
-import cliente.Empresa;
-import controlador.Controlador;
 import controlador.ControladorInt;
-import datos.BaseDeDatos;
-import direccion.Direccion;
 import factura.Factura;
-import entradaSalida.EntradaSalida;
 import excepciones.CodigoInvalido;
 import excepciones.ErrorFecha;
 import excepciones.NifInvalido;
 import llamada.Llamada;
 import modelo.ModeloInt;
-import tarifa.Tarifa;
 
 public class Vista implements VistaInt {
 
-	String[] dias = { "Sabado", "Domingo" }, horas = { "Manyana", "Noche" };
-	JComboBox dia = new JComboBox(dias), hora = new JComboBox(horas);
+	String[] dias = { "Sabado", "Domingo" }, horario = { "Manyana", "Noche" };
+	JComboBox dia = new JComboBox(dias), hora = new JComboBox(horario);
 
 	JTextField nif = new JTextField(20), nombre = new JTextField(20), cp = new JTextField(20),
 			provincia = new JTextField(20), poblacion = new JTextField(20), text1b = new JTextField(20),
@@ -61,15 +52,15 @@ public class Vista implements VistaInt {
 	private ControladorInt controlador;
 
 	JTextField tiempo = new JTextField(20);
-	JLabel tiempoLabel = new JLabel("telefono: ");
+	JLabel tiempoLabel = new JLabel("Tiempo(m): ");
 	JTextField tel = new JTextField(20);
-	JLabel telLabel = new JLabel("tiempo(m): ");
+	JLabel telLabel = new JLabel("Telefono: ");
 
 	JTextField inicio = new JTextField(20);
 	JLabel inicioLabel = new JLabel("Fecha inicio dd/mm/aaaa: ");
-
 	JTextField fin = new JTextField(20);
 	JLabel finLabel = new JLabel("Fecha fin dd/mm/aaaa: ");
+	
 	JTextField idFactura = new JTextField(20);
 	JLabel idFacturaLabel = new JLabel("Codigo de factura (numero): ");
 	JDialog form;
@@ -98,20 +89,22 @@ public class Vista implements VistaInt {
 
 	private void anyadeMenu() {
 		JMenuBar barra = new JMenuBar(); 
+		
+		//Clientes
 		JMenu menuCliente = new JMenu("Opciones cliente");
 		MenuClienteListener listener = new MenuClienteListener();
 		
-		
+		//Opcion de dar de alta clientes
 		JMenu submenu = new JMenu("Dar de alta un nuevo cliente");
 
 		JMenuItem nuevoCliente = new JMenuItem();
 		nuevoCliente.setText("Dar de alta un nuevo particular");
-		nuevoCliente.addActionListener(listener); // Activamos el listener
+		nuevoCliente.addActionListener(listener);
 		submenu.add(nuevoCliente);
 
 		JMenuItem nuevaEmpresa = new JMenuItem();
 		nuevaEmpresa.setText("Dar de alta una nueva empresa");
-		nuevaEmpresa.addActionListener(listener); // Activamos el listener
+		nuevaEmpresa.addActionListener(listener); 
 		submenu.add(nuevaEmpresa);
 		menuCliente.add(submenu);
 
@@ -146,13 +139,12 @@ public class Vista implements VistaInt {
 		menuCliente.add(clienteEntreFechas);
 		barra.add(menuCliente);
 
-		// parte llamada
+		// Llamadas
 		JMenu menuLlamada = new JMenu("Opciones Llamada");
 		MenuLlamadasListener listenerLlamadas = new MenuLlamadasListener();
 		JMenuItem nuevaLlamada = new JMenuItem();
 		nuevaLlamada.setText("Dar de alta una llamada");
-		nuevaLlamada.addActionListener(listenerLlamadas); // Activamos el
-															// listener
+		nuevaLlamada.addActionListener(listenerLlamadas); 
 		menuLlamada.add(nuevaLlamada);
 
 		JMenuItem listarLlamadas = new JMenuItem();
@@ -166,13 +158,12 @@ public class Vista implements VistaInt {
 		menuLlamada.add(recuperarLlamadasEntreFechas);
 		barra.add(menuLlamada);
 
-		// parte facturas
+		// Facturas
 		JMenu menuFactura = new JMenu("Opciones Factura");
 		MenuFacturasListener listenerFacturas = new MenuFacturasListener();
 		JMenuItem nuevaFactura = new JMenuItem();
 		nuevaFactura.setText("Emitir una factura");
-		nuevaFactura.addActionListener(listenerFacturas); // Activamos el
-															// listener
+		nuevaFactura.addActionListener(listenerFacturas);
 		menuFactura.add(nuevaFactura);
 
 		JMenuItem recuperarFactura = new JMenuItem();
@@ -191,18 +182,15 @@ public class Vista implements VistaInt {
 		menuFactura.add(recuperarFactFechas);
 		barra.add(menuFactura);
 
-		// parte cargar y guardar
-
+		// Cargar y Guardar
 		JMenu menuCargarGuardar = new JMenu("Opciones C/G");
 		MenuCargarGuardarListener listenerCargarGuardar = new MenuCargarGuardarListener();
 
-		// Anyadimos dos items de menu, todos siguen el mismo esquema de
-		// creacion.
-		// Opcion de cargar
+
 		JMenuItem cargar = new JMenuItem();
 		cargar.setText("Cargar");
-		cargar.addActionListener(listenerCargarGuardar); // Activamos el
-															// listener
+		cargar.addActionListener(listenerCargarGuardar); 
+	
 		menuCargarGuardar.add(cargar);
 
 		// Opcion de guardar
@@ -237,7 +225,7 @@ public class Vista implements VistaInt {
 		}
 
 		private void recuperarLlamadasFechas() {
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
@@ -249,7 +237,7 @@ public class Vista implements VistaInt {
 			contenedor.add(fin);
 
 			RecuperarLlamadasFechas listener = new RecuperarLlamadasFechas();
-			JButton boton = new JButton("Consultar llamadas fechas");
+			JButton boton = new JButton("CONSULTAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
@@ -258,7 +246,6 @@ public class Vista implements VistaInt {
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-
 					form.setVisible(false);
 					form.dispose();
 				}
@@ -276,7 +263,6 @@ public class Vista implements VistaInt {
 			public void actionPerformed(ActionEvent e) {
 				String niff = nif.getText();
 				List<Llamada> llam = null;
-				boolean result = false;
 				Calendar i = Calendar.getInstance();
 				Calendar f = Calendar.getInstance();
 				String ini = inicio.getText();
@@ -286,7 +272,7 @@ public class Vista implements VistaInt {
 					Date fecha_date = sdf.parse(ini);
 					i.setTime(fecha_date);
 				} catch (ParseException eini) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
+					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy.");
 					System.out.println("Fecha mal");
 					ventanaErrores("Fechas mal");
 				}
@@ -294,9 +280,9 @@ public class Vista implements VistaInt {
 					Date fecha_date = sdf.parse(fi);
 					f.setTime(fecha_date);
 				} catch (ParseException efi) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("Fecha mal");
-					ventanaErrores("Fecha mal");
+					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy.");
+					System.out.println("Error Fecha");
+					ventanaErrores("Error Fecha");
 				}
 
 				try {
@@ -309,8 +295,8 @@ public class Vista implements VistaInt {
 				}
 
 				if (llam == null) {
-					System.out.println("No se pudo listar porque el cliente o no existe o no tiene facturas");
-					ventanaErrores("No se ha podido realizar la operacion. ");
+					System.out.println("No se pudo listar, el cliente no existe o no tiene facturas.");
+					ventanaErrores("No se ha podido realizar la operacion.");
 				} else {
 
 					form.setVisible(false);
@@ -329,8 +315,7 @@ public class Vista implements VistaInt {
 		}
 
 		private void listLlamdasCliente() {
-			// TODO Auto-generated method stub
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
@@ -338,12 +323,12 @@ public class Vista implements VistaInt {
 			contenedor.add(nif);
 
 			ListLlamdasCliente listener = new ListLlamdasCliente();
-			JButton boton = new JButton("Consultar llamadas");
+			JButton boton = new JButton("CONSULTAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no anyadir .");
+			cancelar.setToolTipText("Salir y no anyadir.");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -365,7 +350,7 @@ public class Vista implements VistaInt {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
-				System.out.println("recuperando facturas cliente");
+				System.out.println("Recuperando facturas cliente.");
 				String niff = nif.getText();
 
 				boolean result = false;
@@ -376,8 +361,8 @@ public class Vista implements VistaInt {
 					e1.printStackTrace();
 				}
 				if (!result) {
-					System.out.println("no se pudo crear la factura");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo crear la factura.");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 
 					form.setVisible(false);
@@ -397,20 +382,19 @@ public class Vista implements VistaInt {
 		}
 
 		private void altaLlamada() {
-			// TODO Auto-generated method stub
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
 			contenedor.add(nifLabel);
 			contenedor.add(nif);
-			contenedor.add(telLabel);
-			contenedor.add(tel);
 			contenedor.add(tiempoLabel);
 			contenedor.add(tiempo);
+			contenedor.add(telLabel);
+			contenedor.add(tel);
 
 			AltaLlamada listener = new AltaLlamada();
-			JButton boton = new JButton("anyadir llamada");
+			JButton boton = new JButton("ANYADIR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
@@ -436,25 +420,24 @@ public class Vista implements VistaInt {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Double tiempoo = -1.0;
+			double tiempoo = -1.0;
 			boolean result = false;
 			frame.pack();
 			// TODO Auto-generated method stub
-			System.out.println("generando fact");
+			System.out.println("Generando factura.");
 			String niff = nif.getText();
 			int tell = -1;
 			try {
-
 				tell = Integer.parseInt(tel.getText());
 				tiempoo = Double.parseDouble(tiempo.getText());
 			} catch (Exception e4) {
 				// TODO: handle exception
-				System.out.println("introduce un numero >0 en tiempo y telefono");
-				ventanaErrores("introduce un numero. ");
+				System.out.println("Introduce un numero mayor o igual a 0 en tiempo y telefono.");
+				ventanaErrores("Introduce un numero. ");
 			}
 
 			if (tiempoo >= 0.0 && tell >= 0) {
-				System.out.println("creando");
+				System.out.println("Creando.");
 				try {
 					result = controlador.altaLlamada(niff, tell, tiempoo);
 				} catch (NifInvalido e1) {
@@ -463,8 +446,8 @@ public class Vista implements VistaInt {
 				}
 			}
 			if (!result) {
-				System.out.println("no se pudo crear la factura");
-				ventanaErrores("NO se ha podido realizar la operacion. ");
+				System.out.println("No se pudo crear la factura.");
+				ventanaErrores("No se ha podido realizar la operacion.");
 			} else {
 				ventanaAviso();
 				form.setVisible(false);
@@ -474,15 +457,6 @@ public class Vista implements VistaInt {
 
 	}
 
-	private void central() {
-		Container contenedor = frame.getContentPane();
-		JTextField nif = new JTextField(20);
-		JLabel nifLabel = new JLabel("NIF: ");
-		contenedor.setLayout(new FlowLayout());
-		contenedor.add(nifLabel);
-		contenedor.add(nif);
-		frame.pack();
-	}
 
 	private void mostrarIntro() {
 		Container contenedor = frame.getContentPane();
@@ -541,8 +515,7 @@ public class Vista implements VistaInt {
 		}
 
 		private void clientesEntreFechas() {
-			// TODO Auto-generated method stub
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
@@ -552,9 +525,15 @@ public class Vista implements VistaInt {
 			contenedor.add(fin);
 
 			clientesEntreFechasListener listener = new clientesEntreFechasListener();
-			JButton boton = new JButton("Consultar clientes fechas");
+			JButton boton = new JButton("CONSULTAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
+			boton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					form.dispose();
+				}
+			});
 
 			JButton cancelar = new JButton("CANCELAR");
 			cancelar.setToolTipText("Salir y no consultar .");
@@ -578,42 +557,35 @@ public class Vista implements VistaInt {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Cliente> clientes = null;
-				boolean result = false;
 				Calendar i = Calendar.getInstance();
 				Calendar f = Calendar.getInstance();
 				String ini = inicio.getText();
 				String fi = fin.getText();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				try {
-					Date fecha_date = sdf.parse(ini);
-					i.setTime(fecha_date);
+					Date fecha_date_in = sdf.parse(ini);
+					i.setTime(fecha_date_in);
+					Date fecha_date_fi = sdf.parse(fi);
+					f.setTime(fecha_date_fi);
 				} catch (ParseException eini) {
 					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("fecha mal");
-					ventanaErrores("fechas mal");
+					System.out.println("Fecha mal");
+					ventanaErrores("Fecha mal");
 				}
-				try {
-					Date fecha_date = sdf.parse(fi);
-					f.setTime(fecha_date);
-				} catch (ParseException efi) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("fecha mal");
-					ventanaErrores("fecha mal");
-				}
-
 				try {
 					clientes = controlador.mostrarEntreFechas(i, f);
 				} catch (Exception e2) {
 					// TODO: handle exception
-					System.out.println("fecha inicio es menor que fecha fin?");
-					ventanaErrores("fecha inicio es menor que fecha fin?");
+					System.out.println(e2.getMessage());
+					System.out.println("Error al introducir las fechas.");
+					ventanaErrores("Error al introducir las fechas.");
 				}
 
 				if (clientes == null) {
-					System.out.println("no se pudo listar porque el cliente o no existe o no tiene facturas");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo listar, el cliente no existe o no tiene facturas.");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				}else if(clientes.isEmpty()){
-					mostrarTexto("no hay clientes entre estas fechas");
+					mostrarTexto("No hay clientes entre estas fechas.");
 					form.setVisible(false);
 				}
 				else {
@@ -641,9 +613,15 @@ public class Vista implements VistaInt {
 			contenedor.add(nif);
 
 			BorrarClienteListener listener = new BorrarClienteListener();
-			JButton boton = new JButton("Borrar cliente");
+			JButton boton = new JButton("BORRAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
+			boton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					form.dispose();
+				}
+			});
 
 			JButton cancelar = new JButton("CANCELAR");
 			cancelar.setToolTipText("Salir sin borrar al cliente.");
@@ -668,13 +646,12 @@ public class Vista implements VistaInt {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// borrar cliente
 				String niff = nif.getText();
 				Boolean result = controlador.borrarCliente(niff);
 
 				if (!result) {
-					System.out.println("no se pudo crear la factura");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo crear la factura");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 					ventanaAviso();
 					mostrarIntro();
@@ -684,19 +661,23 @@ public class Vista implements VistaInt {
 		}
 
 		private void nuevaEmpresa() {
-			final JDialog form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			final JDialog form = new JDialog();
 			JPanel paneliz = new JPanel(), panelde = new JPanel(), panelab = new JPanel(), panelar = new JPanel(),
 					panelex = new JPanel();
 			Container contenedor = form.getContentPane();
 			JButton boton1 = new JButton(), boton2 = new JButton();
 			boton1.setText("ACEPTAR");
+			boton1.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					form.dispose();
+				}
+			});
 			boton2.setText("CANCELAR");
-			boton2.setToolTipText("Salir y no a�adir cliente.");
+			boton2.setToolTipText("Salir y no anyadir cliente.");
 			boton2.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-
-					
 					form.dispose();
 				}
 			});
@@ -743,6 +724,7 @@ public class Vista implements VistaInt {
 			NuevaEmpresaListener listener = new NuevaEmpresaListener();
 			boton1.addActionListener(listener);
 
+			
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -755,6 +737,12 @@ public class Vista implements VistaInt {
 			Container contenedor = form.getContentPane();
 			JButton boton1 = new JButton(), boton2 = new JButton();
 			boton1.setText("ACEPTAR");
+			boton1.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					form.dispose();
+				}
+			});
 			boton2.setText("CANCELAR");
 			boton2.setToolTipText("Salir y no anyadir cliente.");
 			boton2.addActionListener(new ActionListener() {
@@ -836,8 +824,8 @@ public class Vista implements VistaInt {
 				Boolean result = controlador.nuevoCliente(name, apellidos, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
 						 correo, opcionDia, opcionHorario);
 				if (!result) {
-					System.out.println("no se pudo crear la factura");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo crear la factura");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 					ventanaAviso();
 					mostrarIntro();
@@ -865,15 +853,14 @@ public class Vista implements VistaInt {
 				Boolean result = controlador.nuevaEmpresa(name, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
 						 correo, opcionDia, opcionHorario);
 				if (!result) {
-					System.out.println("no se pudo crear la factura");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo crear la factura");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 					ventanaAviso();
 					mostrarIntro();
 					
 				}
 			}
-
 		}
 
 		private void cambiarTarifa() {
@@ -883,6 +870,12 @@ public class Vista implements VistaInt {
 			Container contenedor = form.getContentPane();
 			JButton boton1 = new JButton(), boton2 = new JButton();
 			boton1.setText("ACEPTAR");
+			boton1.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					form.dispose();
+				}
+			});
 			boton2.setText("CANCELAR");
 			boton2.setToolTipText("Salir y no cambiar la tarifa.");
 			boton2.addActionListener(new ActionListener() {
@@ -929,7 +922,6 @@ public class Vista implements VistaInt {
 		}
 
 		private class cambiarTarifaListener implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String dni = nif.getText();
@@ -942,8 +934,8 @@ public class Vista implements VistaInt {
 				Boolean result = controlador.cambiarTarifa(dni, tarifaB, tarifaD, tarifaH, opcionDia, opcionHora);
 
 				if (!result) {
-					System.out.println("no se pudo cambiar");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo cambiar");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 					ventanaAviso();
 					mostrarIntro();
@@ -962,9 +954,15 @@ public class Vista implements VistaInt {
 			contenedor.add(nif);
 
 			mostrarClienteListener listener = new mostrarClienteListener();
-			JButton boton = new JButton("Mostrar cliente");
+			JButton boton = new JButton("MOSTRAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
+			boton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					form.dispose();
+				}
+			});
 
 			JButton cancelar = new JButton("CANCELAR");
 			cancelar.setToolTipText("Salir sin mostrar el cliente.");
@@ -980,19 +978,15 @@ public class Vista implements VistaInt {
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
-			System.out.println("s");
-
 		}
 
 		private class mostrarClienteListener implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String niff = nif.getText();
 				Cliente cliente = controlador.mostrarCliente(niff);
 				if(cliente==null){
-					System.out.println("no se pudo mostrar");
+					System.out.println("No se pudo mostrar.");
 					ventanaErrores("Cliente no existe. ");
 				}else{
 					
@@ -1005,10 +999,10 @@ public class Vista implements VistaInt {
 		private void mostrarTodosClientes() {
 			ArrayList<Cliente> clientes = controlador.mostrarTodos();
 			if (clientes == null) {
-				System.out.println("no se pudo listar porque no hay");
-				ventanaErrores("NO se ha podido realizar la operacion. ");
+				System.out.println("No se pudo listar porque no hay.");
+				ventanaErrores("No se ha podido realizar la operacion. ");
 			}else if(clientes.isEmpty()){
-				mostrarTexto("no hay clientes entre estas fechas");
+				mostrarTexto("No hay clientes entre estas fechas");
 				form.dispose();
 			}
 			else {
@@ -1025,7 +1019,6 @@ public class Vista implements VistaInt {
 	}
 
 	private class MenuCargarGuardarListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JMenuItem item = (JMenuItem) e.getSource();
@@ -1044,13 +1037,10 @@ public class Vista implements VistaInt {
 		}
 
 		private void guardar() {
-			// TODO Auto-generated method stub
 			modelo.guardar();
 		}
 
 		private void cargar() {
-			// TODO Auto-generated method stub
-			//GuardaryAbrir.abrirDatos();
 			modelo.cargar();
 			
 		}
@@ -1101,7 +1091,7 @@ public class Vista implements VistaInt {
 			contenedor.add(fin);
 
 			RecuperarFactFechas listener = new RecuperarFactFechas();
-			JButton boton = new JButton("Consultar facturas fechas");
+			JButton boton = new JButton("CONSULTAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
@@ -1127,7 +1117,6 @@ public class Vista implements VistaInt {
 			public void actionPerformed(ActionEvent e) {
 				String niff = nif.getText();
 				List<Factura> fact = null;
-				boolean result = false;
 				Calendar i = Calendar.getInstance();
 				Calendar f = Calendar.getInstance();
 				String ini = inicio.getText();
@@ -1138,30 +1127,29 @@ public class Vista implements VistaInt {
 					i.setTime(fecha_date);
 				} catch (ParseException eini) {
 					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("fecha mal");
-					ventanaErrores("fechas mal");
+					System.out.println("Fecha mal");
+					ventanaErrores("Fechas mal");
 				}
 				try {
 					Date fecha_date = sdf.parse(fi);
 					f.setTime(fecha_date);
 				} catch (ParseException efi) {
 					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("fecha mal");
-					ventanaErrores("fecha mal");
+					System.out.println("Fecha mal");
+					ventanaErrores("Fecha mal");
 				}
 
 				try {
 
 					fact = controlador.recuperarFactFechas(i, f, niff);
 				} catch (Exception e2) {
-					// TODO: handle exception
-					System.out.println("fecha inicio es menor que fecha fin?");
-					ventanaErrores("fecha inicio es menor que fecha fin?");
+					System.out.println("Fecha inicio es menor que fecha fin");
+					ventanaErrores("Fecha inicio es menor que fecha fin");
 				}
 
 				if (fact == null) {
-					System.out.println("no se pudo listar porque el cliente o no existe o no tiene facturas");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo listar porque el cliente o no existe o no tiene facturas");
+					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 
 					form.setVisible(false);
@@ -1173,13 +1161,12 @@ public class Vista implements VistaInt {
 					}
 					factu += "</body></html>";
 					mostrarTexto(factu);
-
 				}
 			}
 		}
 
 		private void recuperarFacurasCliente() {
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
@@ -1187,7 +1174,7 @@ public class Vista implements VistaInt {
 			contenedor.add(nif);
 
 			RecuperarFacturasCliente listener = new RecuperarFacturasCliente();
-			JButton boton = new JButton("Consultar facturas");
+			JButton boton = new JButton("CONSULTAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
@@ -1205,21 +1192,19 @@ public class Vista implements VistaInt {
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
 		}
 
 		private class RecuperarFacturasCliente implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 
-				System.out.println("recuperando factturas cliente");
+				System.out.println("Recuperando facturas cliente.");
 				String niff = nif.getText();
 
 				boolean result = controlador.facurasCliente(niff);
 				if (!result) {
-					System.out.println("No se pudo crear la factura");
+					System.out.println("No se pudo crear la factura.");
 					ventanaErrores("No se ha podido realizar la operacion. ");
 				} else {
 
@@ -1236,12 +1221,10 @@ public class Vista implements VistaInt {
 				}
 
 			}
-
 		}
 
 		private void recuperarDatosFactura() {
-			// TODO Auto-generated method stub
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
@@ -1249,12 +1232,12 @@ public class Vista implements VistaInt {
 			contenedor.add(idFactura);
 
 			RecuperarDatosFactura listener = new RecuperarDatosFactura();
-			JButton boton = new JButton("Recupera Datos");
+			JButton boton = new JButton("RECUPERAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no anyadir .");
+			cancelar.setToolTipText("Salir y no anyadir.");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1274,28 +1257,25 @@ public class Vista implements VistaInt {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 
 				int codigo = -1;
-				System.out.println("recuperando fact");
+				System.out.println("Recuperando factura.");
 				try {
 
 					codigo = Integer.parseInt(idFactura.getText());
 				} catch (Exception e2) {
-					// TODO: handle exception
-					System.out.println("introduce un numero");
-					ventanaErrores("introduce un numero. ");
+					System.out.println("Introduce un numero.");
+					ventanaErrores("Introduce un numero. ");
 				}
 				boolean result = false;
 				try {
 					result = controlador.datosFactura(codigo);
 				} catch (CodigoInvalido e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				if (!result) {
-					System.out.println("no se pudo crear la factura");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo crear la factura.");
+					ventanaErrores("No se ha podido realizar la operacion.");
 				} else {
 
 					form.setVisible(false);
@@ -1308,7 +1288,7 @@ public class Vista implements VistaInt {
 		}
 
 		private void generarFactura() {
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
@@ -1316,16 +1296,15 @@ public class Vista implements VistaInt {
 			contenedor.add(nif);
 
 			GenerarFacturaListener listener = new GenerarFacturaListener();
-			JButton boton = new JButton("Generar Factura");
+			JButton boton = new JButton("GENERAR");
 			boton.addActionListener(listener);
 			contenedor.add(boton);
 
 			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no anyadir .");
+			cancelar.setToolTipText("Salir y no anyadir.");
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-
 					form.setVisible(false);
 					form.dispose();
 				}
@@ -1334,9 +1313,6 @@ public class Vista implements VistaInt {
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
-			System.out.println("s");
-
 		}
 
 		private class GenerarFacturaListener implements ActionListener {
@@ -1345,22 +1321,19 @@ public class Vista implements VistaInt {
 			public void actionPerformed(ActionEvent e) {
 
 				frame.pack();
-				// TODO Auto-generated method stub
-				System.out.println("generando fact");
+				System.out.println("Generando factura.");
 				String niff = nif.getText();
 				boolean result = false;
 				try {
 					result = controlador.generarFactura(niff);
 				} catch (ErrorFecha e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (NifInvalido e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				if (!result) {
-					System.out.println("no se pudo crear la factura");
-					ventanaErrores("NO se ha podido realizar la operacion. ");
+					System.out.println("No se pudo crear la factura.");
+					ventanaErrores("No se ha podido realizar la operacion.");
 				} else {
 					ventanaAviso();
 					form.setVisible(false);
@@ -1370,15 +1343,10 @@ public class Vista implements VistaInt {
 
 		}
 
-		private void cogerDatosGenerarFactura() {
-			Container contenedor = frame.getContentPane();
-
-		}
-
 	}
 
 	public void ventanaAviso() {
-		JOptionPane.showMessageDialog(form, "Accion realizada Correctamente");
+		JOptionPane.showMessageDialog(form, "¡Accion realizada Correctamente!");
 
 	}
 }

@@ -31,8 +31,7 @@ public interface ModeloInt {
 
 	void cargar();
 
-	<T extends FechaInt> ArrayList<T> recuperaEntreFechas(ArrayList<T> datos, Calendar inicio, Calendar fin)
-			throws ErrorFecha;
+	<T extends FechaInt> ArrayList<T> recuperaEntreFechas(ArrayList<T> datos2, Calendar inicio, Calendar fin) throws ErrorFecha;
 
 	Cliente getCliente(String nif);
 

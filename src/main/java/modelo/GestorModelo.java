@@ -45,8 +45,8 @@ public class GestorModelo implements ModeloInt{
 	public void cargar(){
 		datos=EntradaSalida.abrirDatos();
 	}
-	public <T extends FechaInt> ArrayList<T> recuperaEntreFechas(ArrayList<T>datos, Calendar inicio, Calendar fin) throws ErrorFecha{
-		return ((ModeloInt) datos).recuperaEntreFechas(datos, inicio ,fin);
+	public <T extends FechaInt> ArrayList<T> recuperaEntreFechas(ArrayList<T>datos2, Calendar inicio, Calendar fin) throws ErrorFecha{
+		return datos.recuperaEntreFechas(datos2, inicio ,fin);
 	}
 
 	public   HashMap<Integer, Factura> getListaFacturas(){
