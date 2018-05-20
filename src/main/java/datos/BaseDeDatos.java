@@ -85,7 +85,7 @@ public class BaseDeDatos implements Serializable{
 	public boolean borrarCliente(String nif) {
 		if (listaClientes.containsKey(nif)) {
 			listaClientes.remove(nif);
-			System.out.println("Cliente eliminado.");
+			//System.out.println("Cliente eliminado.");
 			return true;
 		} else {
 			return false;
@@ -109,7 +109,7 @@ public class BaseDeDatos implements Serializable{
 			throw new NifInvalido();
 		}else{
 			cliente.getListaLlamadas().add(llamada);
-			System.out.println("Llamada añadida.");
+			//System.out.println("Llamada añadida.");
 			return true;
 		}
 			
@@ -122,11 +122,11 @@ public class BaseDeDatos implements Serializable{
 		if (cliente != null) {
 			ArrayList<Llamada> lista = cliente.getListaLlamadas();
 			if (lista.isEmpty()) {
-				System.out.println("Cliente sin llamadas.");
+				//System.out.println("Cliente sin llamadas.");
 			} else {
 				setListLlamdasCliente(lista);
-				System.out.println("Las llamadas del cliente son:");
-				System.out.println(lista.toString());
+				//System.out.println("Las llamadas del cliente son:");
+				//System.out.println(lista.toString());
 			}
 			return true;
 		} else {
@@ -138,8 +138,8 @@ public class BaseDeDatos implements Serializable{
 	public boolean recuperarFacturaPorCodigo(int codigo) throws CodigoInvalido{
 		Factura factura = listaFacturas.get(codigo);
 			if (factura != null) {
-				System.out.println("Datos de la factura: ");
-				System.out.println(factura.toString());
+				//System.out.println("Datos de la factura: ");
+				//System.out.println(factura.toString());
 				setFacturaBuscada(factura);
 				return true;
 			} else {
@@ -159,10 +159,10 @@ public class BaseDeDatos implements Serializable{
 			ArrayList<Integer> facturas = cliente.getListaCodigoFacturas();
 			if (!facturas.isEmpty()) {
 				//Si la lista de facturas no está vacía, las muestra una a una recorriéndola y las guarda en una nueva lista
-				System.out.println("Facturas: ");
+				//System.out.println("Facturas: ");
 				for (Integer contador : facturas) {
 					listaFacturasCliente.add(listaFacturas.get(contador));
-					System.out.println(listaFacturas.get(contador).toString());
+					//System.out.println(listaFacturas.get(contador).toString());
 				}
 				return true;
 			} else {
@@ -186,7 +186,7 @@ public class BaseDeDatos implements Serializable{
 			if (listCodigoFacturas.isEmpty()) { //Cliente sin facturas, facturamos sus llamadas.
 				ArrayList<Llamada> listaLlamadas = cliente.getListaLlamadas();
 				if (listaLlamadas.isEmpty()) {	//La lista de llamadas está vacía
-					System.out.println("No hay llamadas.");
+					//System.out.println("No hay llamadas.");
 					return false;
 				} else {
 					//Si hay llamadas, calculamos el precio de todas las llamadas
@@ -202,14 +202,14 @@ public class BaseDeDatos implements Serializable{
 					listaFacturas.put(factura.getCodigo(), factura);
 					incrementaCodigoFactura();
 					cliente.setFechaUltimaFactura(fechaFacturacion);
-					System.out.println("Facturado.");
+					//System.out.println("Facturado.");
 					return true;
 				}
 			} else { //El cliente tiene facturas anteriores
 				ArrayList<Llamada> llamadas = cliente.getListaLlamadas();
 				//Si no tiene llamadas
 				if (llamadas.isEmpty()) {
-					System.out.println("Sin llamadas que facturar.");
+					//System.out.println("Sin llamadas que facturar.");
 					return false;
 				} else { // Facturamos todas las llamadas desde la última fecha facturada
 					for (Llamada llamada : llamadas) {
@@ -226,11 +226,11 @@ public class BaseDeDatos implements Serializable{
 						cliente.setFechaUltimaFactura(fechaFacturacion);
 						incrementaCodigoFactura();
 						listaFacturas.put(factura.getCodigo(), factura);
-						System.out.println("Facturado.");
+						//System.out.println("Facturado.");
 						return true;
 					} else {
 						//Si no, mostramos por pantalla que no hay llamadas
-						System.out.println("Sin llamadas que facturar.");
+						//System.out.println("Sin llamadas que facturar.");
 						return false;
 					}
 

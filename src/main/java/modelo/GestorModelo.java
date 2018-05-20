@@ -19,17 +19,18 @@ import tarifa.Tarifa;
 
 public class GestorModelo implements ModeloInt{
 	BaseDeDatos datos;
+	
 	public GestorModelo() {
 		super();
 		datos=new BaseDeDatos();
 	}
+	
 	public boolean generarFactura(String nif) throws ErrorFecha, NifInvalido{
 		return  datos.generarFactura(nif);
 	}
 	public  boolean nuevoCliente(Cliente cliente){
 		return datos.nuevoCliente(cliente);
 	}
-	 
 	public boolean recuperarFacturaPorCodigo(int codigo) throws CodigoInvalido{
 		return datos.recuperarFacturaPorCodigo(codigo);
 	}

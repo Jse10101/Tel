@@ -24,6 +24,6 @@ public class Direccion implements Serializable{
 
 	@Override
 	public String toString() {
-		return "CP: " + codigoPostal + " | Provincia: " + provincia + " | Poblacion: " + poblacion;
+		return "CP: " + codigoPostal + "  Provincia: " + provincia + "  Poblacion: " + poblacion;
 	}
 }

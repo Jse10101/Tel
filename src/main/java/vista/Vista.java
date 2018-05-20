@@ -82,7 +82,6 @@ public class Vista implements VistaInt {
 
 	public void dibujaVentana() {
 		anyadeMenu();
-
 		mostrarIntro();
 		frame.setVisible(true);
 	}
@@ -91,7 +90,7 @@ public class Vista implements VistaInt {
 		JMenuBar barra = new JMenuBar(); 
 		
 		//Clientes
-		JMenu menuCliente = new JMenu("Opciones cliente");
+		JMenu menuCliente = new JMenu("Opciones Cliente");
 		MenuClienteListener listener = new MenuClienteListener();
 		
 		//Opcion de dar de alta clientes
@@ -122,19 +121,19 @@ public class Vista implements VistaInt {
 
 		// Opcion de recuperar un cliente
 		JMenuItem recuperarCliente = new JMenuItem();
-		recuperarCliente.setText("Recuperar cliente");
+		recuperarCliente.setText("Recuperar un cliente");
 		recuperarCliente.addActionListener(listener);
 		menuCliente.add(recuperarCliente);
 
 		// Opcion de recuperar todos
 		JMenuItem recuperarTodos = new JMenuItem();
-		recuperarTodos.setText("Recuperar todos los clientes");
+		recuperarTodos.setText("Recuperar clientes");
 		recuperarTodos.addActionListener(listener);
 		menuCliente.add(recuperarTodos);
 
 		// Opcion de clientes entre fechas
 		JMenuItem clienteEntreFechas = new JMenuItem();
-		clienteEntreFechas.setText("Recuperar todos los clientes entre dos fechas");
+		clienteEntreFechas.setText("Recuperar clientes creados entre dos fechas");
 		clienteEntreFechas.addActionListener(listener);
 		menuCliente.add(clienteEntreFechas);
 		barra.add(menuCliente);
@@ -143,17 +142,19 @@ public class Vista implements VistaInt {
 		JMenu menuLlamada = new JMenu("Opciones Llamada");
 		MenuLlamadasListener listenerLlamadas = new MenuLlamadasListener();
 		JMenuItem nuevaLlamada = new JMenuItem();
-		nuevaLlamada.setText("Dar de alta una llamada");
+		nuevaLlamada.setText("Dar de alta una nueva llamada");
 		nuevaLlamada.addActionListener(listenerLlamadas); 
 		menuLlamada.add(nuevaLlamada);
 
+		// Opcion de listar llamadas de un cliente
 		JMenuItem listarLlamadas = new JMenuItem();
-		listarLlamadas.setText("Listar todas las llamadas de un cliente");
+		listarLlamadas.setText("Listar llamadas de un cliente");
 		listarLlamadas.addActionListener(listenerLlamadas);
 		menuLlamada.add(listarLlamadas);
 
+		// Opcion de listar llamadas entre dos fechas
 		JMenuItem recuperarLlamadasEntreFechas = new JMenuItem();
-		recuperarLlamadasEntreFechas.setText("Recuperar todas las llamadas realizadas entre dos fechas");
+		recuperarLlamadasEntreFechas.setText("Recuperar llamadas realizadas entre dos fechas");
 		recuperarLlamadasEntreFechas.addActionListener(listenerLlamadas);
 		menuLlamada.add(recuperarLlamadasEntreFechas);
 		barra.add(menuLlamada);
@@ -161,23 +162,28 @@ public class Vista implements VistaInt {
 		// Facturas
 		JMenu menuFactura = new JMenu("Opciones Factura");
 		MenuFacturasListener listenerFacturas = new MenuFacturasListener();
+		
+		// Opcion de emitir factura
 		JMenuItem nuevaFactura = new JMenuItem();
-		nuevaFactura.setText("Emitir una factura");
+		nuevaFactura.setText("Emitir una nueva factura");
 		nuevaFactura.addActionListener(listenerFacturas);
 		menuFactura.add(nuevaFactura);
 
+		// Opcion de recperar datos de una factura
 		JMenuItem recuperarFactura = new JMenuItem();
-		recuperarFactura.setText("Recuperar los datos de una factura");
+		recuperarFactura.setText("Recuperar datos de una factura");
 		recuperarFactura.addActionListener(listenerFacturas);
 		menuFactura.add(recuperarFactura);
 
+		// Opcion de recuperar las facturas de un cliente
 		JMenuItem recuperarFactCliente = new JMenuItem();
-		recuperarFactCliente.setText("Recuperar todas las facturas de un cliente");
+		recuperarFactCliente.setText("Recuperar facturas de un cliente");
 		recuperarFactCliente.addActionListener(listenerFacturas);
 		menuFactura.add(recuperarFactCliente);
 
+		// Opcion de recuperar facturas emitidas entre dos fechas
 		JMenuItem recuperarFactFechas = new JMenuItem();
-		recuperarFactFechas.setText("Recuperar todas las facturas emitidas entre dos fechas");
+		recuperarFactFechas.setText("Recuperar facturas emitidas entre dos fechas");
 		recuperarFactFechas.addActionListener(listenerFacturas);
 		menuFactura.add(recuperarFactFechas);
 		barra.add(menuFactura);
@@ -186,7 +192,7 @@ public class Vista implements VistaInt {
 		JMenu menuCargarGuardar = new JMenu("Opciones C/G");
 		MenuCargarGuardarListener listenerCargarGuardar = new MenuCargarGuardarListener();
 
-
+		// Opcion de cargar
 		JMenuItem cargar = new JMenuItem();
 		cargar.setText("Cargar");
 		cargar.addActionListener(listenerCargarGuardar); 
@@ -203,6 +209,523 @@ public class Vista implements VistaInt {
 
 	}
 
+	//EMPIEZA
+	
+	
+	//Menu cliente
+		private class MenuClienteListener implements ActionListener {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JMenuItem item = (JMenuItem) e.getSource();
+				String texto = item.getText();
+				switch (texto) {
+				case "Dar de alta un nuevo particular":
+					nuevoCliente();
+					break;
+				case "Dar de alta una nueva empresa":
+					nuevaEmpresa();
+					break;
+				case "Borrar un cliente":
+					borrarCliente();
+					break;
+				case "Cambiar la tarifa de un cliente":
+					cambiarTarifa();
+					break;
+				case "Recuperar cliente":
+					mostrarCliente();
+					break;
+				case "Recuperar clientes":
+					mostrarTodosClientes();
+					break;
+				case "Recuperar clientes creados entre dos fechas":
+					clientesEntreFechas();
+					break;
+				}
+			}
+
+			//Clientes entre dos fechas
+			private void clientesEntreFechas() {
+				form = new JDialog();
+				Container contenedor = form.getContentPane();
+
+				contenedor.setLayout(new FlowLayout());
+				contenedor.add(inicioLabel);
+				contenedor.add(inicio);
+				contenedor.add(finLabel);
+				contenedor.add(fin);
+
+				clientesEntreFechasListener listener = new clientesEntreFechasListener();
+				JButton boton = new JButton("CONSULTAR");
+				boton.addActionListener(listener);
+				contenedor.add(boton);
+				boton.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+
+				JButton cancelar = new JButton("CANCELAR");
+				cancelar.setToolTipText("Salir y no consultar .");
+				cancelar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+
+						form.setVisible(false);
+						form.dispose();
+					}
+				});
+				contenedor.add(cancelar);
+				form.pack();
+				form.setVisible(true);
+				form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			}
+
+			//Escuchador de clientes entre dos fechas
+			private class clientesEntreFechasListener implements ActionListener {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					ArrayList<Cliente> clientes = null;
+					Calendar fechaInicio = Calendar.getInstance();
+					Calendar fechaFin = Calendar.getInstance();
+					String ini = inicio.getText();
+					String fi = fin.getText();
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+					try {
+						Date fecha_date_in = sdf.parse(ini);
+						fechaInicio.setTime(fecha_date_in);
+					} catch (ParseException eini) {
+						ventanaErrores("Fecha erronea");
+					}
+					try {
+						Date fecha_date_fi = sdf.parse(fi);
+						fechaFin.setTime(fecha_date_fi);
+					} catch (ParseException efi) {
+						ventanaErrores("Fecha erronea");
+					}
+					try {
+						clientes = controlador.mostrarEntreFechas(fechaInicio, fechaFin);
+					} catch (Exception e2) {
+						ventanaErrores("Error al introducir las fechas.");
+					}
+					if (clientes == null) {
+						ventanaErrores("No se ha podido realizar la operacion.");
+					}else if(clientes.isEmpty()){
+						mostrarTexto("No hay clientes entre estas fechas.");
+						form.setVisible(false);
+					}
+					else {
+						form.setVisible(false);
+						String cliente = "<html><body>";
+						for (Cliente c : clientes) {
+							cliente += c.toString();
+							cliente += "<br>";
+						}
+						cliente += "</body></html>";
+						mostrarTexto(cliente);
+					}
+				}
+			}
+			
+			//Borrar un cliente
+			private void borrarCliente() {
+				final JDialog form = new JDialog();
+				Container contenedor = form.getContentPane();
+
+				contenedor.setLayout(new FlowLayout());
+				contenedor.add(nifLabel);
+				contenedor.add(nif);
+
+				BorrarClienteListener listener = new BorrarClienteListener();
+				JButton boton = new JButton("BORRAR");
+				boton.addActionListener(listener);
+				contenedor.add(boton);
+				boton.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+
+				JButton cancelar = new JButton("CANCELAR");
+				cancelar.setToolTipText("Salir sin borrar al cliente.");
+				cancelar.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+
+						form.setVisible(false);
+						form.dispose();
+					}
+				});
+				contenedor.add(cancelar);
+				form.pack();
+				form.setVisible(true);
+				form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			}
+
+			//Escuchador de borrar cliente
+			private class BorrarClienteListener implements ActionListener {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String niff = nif.getText();
+					Boolean result = controlador.borrarCliente(niff);
+					if (result) {
+						ventanaAviso();
+						mostrarIntro();
+					} else {
+						ventanaErrores("No se ha podido realizar la operacion.");
+					}
+				}
+			}
+
+			//Nueva Empresa
+			private void nuevaEmpresa() {
+				final JDialog form = new JDialog();
+				JPanel paneliz = new JPanel(), panelde = new JPanel(), panelab = new JPanel(), panelar = new JPanel(),
+						panelex = new JPanel();
+				Container contenedor = form.getContentPane();
+				JButton boton1 = new JButton(), boton2 = new JButton();
+				boton1.setText("ACEPTAR");
+				boton1.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+				boton2.setText("CANCELAR");
+				boton2.setToolTipText("Salir y no anyadir cliente.");
+				boton2.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+				text1.setText("Tarifa basica: ");
+				text2.setText("Tarifa segun dia: ");
+				text3.setText("Tarifa segun hora: ");
+				text4.setText("Correo electronico: ");
+
+				form.setTitle("Nuevo cliente");
+				contenedor.setLayout(new FlowLayout());
+				paneliz.setLayout(new GridLayout(10, 0));
+				paneliz.add(nombreLabel);
+				paneliz.add(nifLabel);
+				paneliz.add(cpLabel);
+				paneliz.add(provinciaLabel);
+				paneliz.add(poblacionLabel);
+				paneliz.add(text1);
+				paneliz.add(dia);
+				paneliz.add(hora);
+				paneliz.add(text4);
+
+				panelde.setLayout(new GridLayout(10, 0));
+				panelde.add(nombre);
+				panelde.add(nif);
+				panelde.add(cp);
+				panelde.add(provincia);
+				panelde.add(poblacion);
+				panelde.add(text1b);
+				panelde.add(text2b);
+				panelde.add(text3b);
+				panelde.add(text4b);
+
+				panelar.setLayout(new GridLayout(1, 1));
+				panelar.add(paneliz);
+				panelar.add(panelde);
+				panelab.setLayout(new FlowLayout());
+				panelab.add(boton1);
+				panelab.add(boton2);
+				panelex.setLayout(new GridLayout(2, 0));
+				panelex.add(panelar);
+				panelex.add(panelab);
+				contenedor.add(panelex);
+
+				NuevaEmpresaListener listener = new NuevaEmpresaListener();
+				boton1.addActionListener(listener);
+
+				form.pack();
+				form.setVisible(true);
+				form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			}
+
+			//Nuevo Cliente 
+			private void nuevoCliente() {
+				final JDialog form = new JDialog();
+				JPanel paneliz = new JPanel(), panelde = new JPanel(), panelab = new JPanel(), panelar = new JPanel(),
+						panelex = new JPanel();
+				Container contenedor = form.getContentPane();
+				JButton boton1 = new JButton(), boton2 = new JButton();
+				boton1.setText("ACEPTAR");
+				boton1.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+				boton2.setText("CANCELAR");
+				boton2.setToolTipText("Salir y no anyadir cliente.");
+				boton2.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+				text1.setText("Tarifa basica: ");
+				text2.setText("Tarifa segun dia: ");
+				text3.setText("Tarifa segun hora: ");
+				text4.setText("Correo electronico: ");
+				text5.setText("Apellidos: ");
+
+				form.setTitle("Nuevo cliente");
+				contenedor.setLayout(new FlowLayout());
+				paneliz.setLayout(new GridLayout(10, 0));
+				paneliz.add(nombreLabel);
+				paneliz.add(text5);
+				paneliz.add(nifLabel);
+				paneliz.add(cpLabel);
+				paneliz.add(provinciaLabel);
+				paneliz.add(poblacionLabel);
+				paneliz.add(text1);
+				paneliz.add(dia);
+				paneliz.add(hora);
+				paneliz.add(text4);
+
+				panelde.setLayout(new GridLayout(10, 0));
+				panelde.add(nombre);
+				panelde.add(text5b);
+				panelde.add(nif);
+				panelde.add(cp);
+				panelde.add(provincia);
+				panelde.add(poblacion);
+				panelde.add(text1b);
+				panelde.add(text2b);
+				panelde.add(text3b);
+				panelde.add(text4b);
+
+				panelar.setLayout(new GridLayout(1, 1));
+				panelar.add(paneliz);
+				panelar.add(panelde);
+				panelab.setLayout(new FlowLayout());
+				panelab.add(boton1);
+				panelab.add(boton2);
+				panelex.setLayout(new GridLayout(2, 0));
+				panelex.add(panelar);
+				panelex.add(panelab);
+				contenedor.add(panelex);
+
+				NuevoClienteListener listener = new NuevoClienteListener();
+				boton1.addActionListener(listener);
+
+				form.pack();
+				form.setVisible(true);
+				form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			}
+			
+			//Escuchador nuevo cliente
+			private class NuevoClienteListener implements ActionListener {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					frame.pack();
+					String name = nombre.getText();
+					String apellidos = text5b.getText();
+					String dni = nif.getText();
+					String pc = cp.getText();
+					String prov = provincia.getText();
+					String pueblo = poblacion.getText();
+					Float tarifaB = Float.parseFloat(text1b.getText());
+					Float tarifaD = Float.parseFloat(text2b.getText());
+					Float tarifaH = Float.parseFloat(text3b.getText());
+					String correo = text4b.getText();
+					int opcionDia = dia.getSelectedIndex();
+					int opcionHorario = hora.getSelectedIndex();
+					Boolean result = controlador.nuevoCliente(name, apellidos, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
+							 correo, opcionDia, opcionHorario);
+					if (result) {
+						ventanaAviso();
+						mostrarIntro();	
+					} else {
+						ventanaErrores("No se ha podido realizar la operacion. ");
+					}
+				}
+			}
+
+			//Escuchador nueva empresa
+			private class NuevaEmpresaListener implements ActionListener {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String name = nombre.getText();
+					String dni = nif.getText();
+					String pc = cp.getText();
+					String prov = provincia.getText();
+					String pueblo = poblacion.getText();
+					Float tarifaB = Float.parseFloat(text1b.getText());
+					Float tarifaD = Float.parseFloat(text2b.getText());
+					Float tarifaH = Float.parseFloat(text3b.getText());
+					String correo = text4b.getText();
+					int opcionDia = dia.getSelectedIndex();
+					int opcionHorario = hora.getSelectedIndex();
+					Boolean result = controlador.nuevaEmpresa(name, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
+							 correo, opcionDia, opcionHorario);
+					if (result) {
+						ventanaAviso();
+						mostrarIntro();
+
+					} else {
+						ventanaErrores("No se ha podido realizar la operacion. ");
+					}
+				}
+			}
+			
+			//Cambiar tarifa
+			private void cambiarTarifa() {
+				final JDialog form = new JDialog();
+				JPanel paneliz = new JPanel(), panelde = new JPanel(), panelab = new JPanel(), panelar = new JPanel(),
+						panelex = new JPanel();
+				Container contenedor = form.getContentPane();
+				JButton boton1 = new JButton(), boton2 = new JButton();
+				boton1.setText("ACEPTAR");
+				boton1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+				boton2.setText("CANCELAR");
+				boton2.setToolTipText("Salir y no cambiar la tarifa.");
+				boton2.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+
+						
+						form.dispose();
+					}
+				});
+				text1.setText("Tarifa basica: ");
+
+				form.setTitle("Cambiar tarifa");
+				contenedor.setLayout(new FlowLayout());
+				paneliz.setLayout(new GridLayout(4, 0));
+				paneliz.add(nifLabel);
+				paneliz.add(text1);
+				paneliz.add(dia);
+				paneliz.add(hora);
+
+				panelde.setLayout(new GridLayout(4, 0));
+				panelde.add(nif);
+				panelde.add(text1b);
+				panelde.add(text2b);
+				panelde.add(text3b);
+
+				panelar.setLayout(new GridLayout(1, 1));
+				panelar.add(paneliz);
+				panelar.add(panelde);
+				panelab.setLayout(new FlowLayout());
+				panelab.add(boton1);
+				panelab.add(boton2);
+				panelex.setLayout(new GridLayout(2, 0));
+				panelex.add(panelar);
+				panelex.add(panelab);
+				contenedor.add(panelex);
+
+				cambiarTarifaListener listener = new cambiarTarifaListener();
+				boton1.addActionListener(listener);
+
+				form.pack();
+				form.setVisible(true);
+				form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			}
+
+			//Escuchador cambiar tarifa
+			private class cambiarTarifaListener implements ActionListener {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String dni = nif.getText();
+					Float tarifaB = Float.parseFloat(text1b.getText());
+					Float tarifaD = Float.parseFloat(text2b.getText());
+					Float tarifaH = Float.parseFloat(text3b.getText());
+					int opcionDia = dia.getSelectedIndex();
+					int opcionHora = hora.getSelectedIndex();
+					Boolean result = controlador.cambiarTarifa(dni, tarifaB, tarifaD, tarifaH, opcionDia, opcionHora);
+					if (result) {
+						ventanaAviso();
+						mostrarIntro();
+					} else {
+						ventanaErrores("No se ha podido realizar la operacion. ");
+					}
+				}
+			}
+
+			//Mostrar cliente
+			private void mostrarCliente() {
+				final JDialog form = new JDialog();
+				Container contenedor = form.getContentPane();
+
+				contenedor.setLayout(new FlowLayout());
+				contenedor.add(nifLabel);
+				contenedor.add(nif);
+
+				mostrarClienteListener listener = new mostrarClienteListener();
+				JButton boton = new JButton("MOSTRAR");
+				boton.addActionListener(listener);
+				contenedor.add(boton);
+				boton.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						form.dispose();
+					}
+				});
+
+				JButton cancelar = new JButton("CANCELAR");
+				cancelar.setToolTipText("Salir sin mostrar el cliente.");
+				cancelar.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+
+						
+						form.dispose();
+					}
+				});
+				contenedor.add(cancelar);
+				form.pack();
+				form.setVisible(true);
+				form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			}
+			
+			//Escuchador mostrar cliente
+			private class mostrarClienteListener implements ActionListener {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String niff = nif.getText();
+					Cliente cliente = controlador.mostrarCliente(niff);
+					if(cliente==null){
+						ventanaErrores("Cliente no existe. ");
+					}else{
+					mostrarTexto(cliente.toString());
+					}
+				}
+			}
+			
+			//Mostrar todos los clientes
+			private void mostrarTodosClientes() {
+				ArrayList<Cliente> clientes = controlador.mostrarTodos();
+				if (clientes == null) {
+					ventanaErrores("No se ha podido realizar la operacion. ");
+				}else if(clientes.isEmpty()){
+					mostrarTexto("No hay clientes entre estas fechas");
+					form.dispose();
+				}
+				else {
+					String cliente = "<html><body>";
+					for (Cliente c : clientes) {
+						cliente += c.toString();
+						cliente += "<br>";
+					}
+					cliente += "</body></html>";
+					mostrarTexto(cliente);
+				}
+			}
+		}
+	
+
+	//Menu llamadas
 	private class MenuLlamadasListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -210,20 +733,18 @@ public class Vista implements VistaInt {
 			String texto = item.getText();
 			switch (texto) {
 			case "Dar de alta una llamada":
-				System.out.println(texto);
 				altaLlamada();
 				break;
 			case "Listar todas las llamadas de un cliente":
-				System.out.println(texto);
 				listLlamdasCliente();
 				break;
 			case "Recuperar todas las llamadas realizadas entre dos fechas":
-				System.out.println(texto);
 				recuperarLlamadasFechas();
 				break;
 			}
 		}
 
+		//Recuperar llamadas entre dos fechas
 		private void recuperarLlamadasFechas() {
 			form = new JDialog();
 			Container contenedor = form.getContentPane();
@@ -254,11 +775,10 @@ public class Vista implements VistaInt {
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
 		}
 
+		//Escuchador de recuperar llamadas entre dos fechas
 		private class RecuperarLlamadasFechas implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String niff = nif.getText();
@@ -272,52 +792,39 @@ public class Vista implements VistaInt {
 					Date fecha_date = sdf.parse(ini);
 					i.setTime(fecha_date);
 				} catch (ParseException eini) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy.");
-					System.out.println("Fecha mal");
-					ventanaErrores("Fechas mal");
+					ventanaErrores("Fechas erronea");
 				}
 				try {
 					Date fecha_date = sdf.parse(fi);
 					f.setTime(fecha_date);
 				} catch (ParseException efi) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy.");
-					System.out.println("Error Fecha");
 					ventanaErrores("Error Fecha");
 				}
-
 				try {
-
 					llam = controlador.recuperarLlamadasFechas(i, f, niff);
 				} catch (Exception e2) {
-					// TODO: handle exception
-					System.out.println("¿Fecha inicio es menor que fecha fin?");
-					ventanaErrores("¿Fecha inicio es menor que fecha fin?");
+					ventanaErrores("Error al introducir las fechas.");
 				}
 
 				if (llam == null) {
-					System.out.println("No se pudo listar, el cliente no existe o no tiene facturas.");
 					ventanaErrores("No se ha podido realizar la operacion.");
 				} else {
-
 					form.setVisible(false);
-
-					String llamtexto = "<html><body>";
-					for (Llamada llamada : llam) {
-						llamtexto += llamada.toString();
-						llamtexto += "<br>";
+					String llamaTexto = "<html><body>";
+					for (Llamada llamadas : llam) {
+						llamaTexto += llamadas.toString();
+						llamaTexto += "<br>";
 					}
-					llamtexto += "</body></html>";
-					mostrarTexto(llamtexto);
-
+					llamaTexto += "</body></html>";
+					mostrarTexto(llamaTexto);
 				}
 			}
-
 		}
 
 		private void listLlamdasCliente() {
 			form = new JDialog();
+			
 			Container contenedor = form.getContentPane();
-
 			contenedor.setLayout(new FlowLayout());
 			contenedor.add(nifLabel);
 			contenedor.add(nif);
@@ -332,39 +839,30 @@ public class Vista implements VistaInt {
 			cancelar.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-
 					form.setVisible(false);
 					form.dispose();
 				}
 			});
+			
 			contenedor.add(cancelar);
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
 		}
-
+		
+		//Listar llamadas de un cliente
 		private class ListLlamdasCliente implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
-				System.out.println("Recuperando facturas cliente.");
 				String niff = nif.getText();
-
 				boolean result = false;
+				
 				try {
 					result = controlador.listLlamdasCliente(niff);
 				} catch (NifInvalido e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				if (!result) {
-					System.out.println("No se pudo crear la factura.");
-					ventanaErrores("No se ha podido realizar la operacion. ");
-				} else {
-
+				if (result) {
 					form.setVisible(false);
 					List<Llamada> llamadas = modelo.getListLlamadasCliente();
 					String llam = "<html><body>";
@@ -374,13 +872,13 @@ public class Vista implements VistaInt {
 					}
 					llam += "</body></html>";
 					mostrarTexto(llam);
-
+				} else {
+					ventanaErrores("No se ha podido realizar la operacion.");
 				}
-
 			}
-
 		}
-
+		
+		//Dar de alta una llamada
 		private void altaLlamada() {
 			form = new JDialog();
 			Container contenedor = form.getContentPane();
@@ -412,10 +910,10 @@ public class Vista implements VistaInt {
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
 		}
 	}
-
+	
+	//Escuchador dar de alta una llamada
 	private class AltaLlamada implements ActionListener {
 
 		@Override
@@ -423,663 +921,56 @@ public class Vista implements VistaInt {
 			double tiempoo = -1.0;
 			boolean result = false;
 			frame.pack();
-			// TODO Auto-generated method stub
-			System.out.println("Generando factura.");
 			String niff = nif.getText();
 			int tell = -1;
 			try {
 				tell = Integer.parseInt(tel.getText());
 				tiempoo = Double.parseDouble(tiempo.getText());
 			} catch (Exception e4) {
-				// TODO: handle exception
-				System.out.println("Introduce un numero mayor o igual a 0 en tiempo y telefono.");
-				ventanaErrores("Introduce un numero. ");
+				ventanaErrores("Introduce un numero valido.");
 			}
-
 			if (tiempoo >= 0.0 && tell >= 0) {
-				System.out.println("Creando.");
 				try {
 					result = controlador.altaLlamada(niff, tell, tiempoo);
 				} catch (NifInvalido e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
-			if (!result) {
-				System.out.println("No se pudo crear la factura.");
-				ventanaErrores("No se ha podido realizar la operacion.");
-			} else {
+			if (result) {
 				ventanaAviso();
 				form.setVisible(false);
 				mostrarIntro();
-			}
-		}
-
-	}
-
-
-	private void mostrarIntro() {
-		Container contenedor = frame.getContentPane();
-		texto.setText("Bienvenido a la apicacion");
-		contenedor.add(texto);
-		frame.pack();
-		frame.setVisible(true);
-
-	}
-
-	private void mostrarTexto(String text) {
-		Container contenedor = frame.getContentPane();
-		texto.setText(text);
-		contenedor.add(texto);
-		frame.pack();
-		frame.setVisible(true);
-
-	}
-
-	private class MenuClienteListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JMenuItem item = (JMenuItem) e.getSource();
-			String texto = item.getText();
-			switch (texto) {
-			case "Dar de alta un nuevo particular":
-				System.out.println(texto);
-				nuevoCliente();
-				break;
-			case "Dar de alta una nueva empresa":
-				System.out.println(texto);
-				nuevaEmpresa();
-				break;
-			case "Borrar un cliente":
-				System.out.println(texto);
-				borrarCliente();
-				break;
-			case "Cambiar la tarifa de un cliente":
-				System.out.println(texto);
-				cambiarTarifa();
-				break;
-			case "Recuperar cliente":
-				System.out.println(texto);
-				mostrarCliente();
-				break;
-			case "Recuperar todos los clientes":
-				System.out.println(texto);
-				mostrarTodosClientes();
-				break;
-			case "Recuperar todos los clientes entre dos fechas":
-				System.out.println(texto);
-				clientesEntreFechas();
-				break;
-			}
-		}
-
-		private void clientesEntreFechas() {
-			form = new JDialog();
-			Container contenedor = form.getContentPane();
-
-			contenedor.setLayout(new FlowLayout());
-			contenedor.add(inicioLabel);
-			contenedor.add(inicio);
-			contenedor.add(finLabel);
-			contenedor.add(fin);
-
-			clientesEntreFechasListener listener = new clientesEntreFechasListener();
-			JButton boton = new JButton("CONSULTAR");
-			boton.addActionListener(listener);
-			contenedor.add(boton);
-			boton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					form.dispose();
-				}
-			});
-
-			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir y no consultar .");
-			cancelar.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-
-					form.setVisible(false);
-					form.dispose();
-				}
-			});
-			contenedor.add(cancelar);
-			form.pack();
-			form.setVisible(true);
-			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
-		}
-
-		private class clientesEntreFechasListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ArrayList<Cliente> clientes = null;
-				Calendar i = Calendar.getInstance();
-				Calendar f = Calendar.getInstance();
-				String ini = inicio.getText();
-				String fi = fin.getText();
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				try {
-					Date fecha_date_in = sdf.parse(ini);
-					i.setTime(fecha_date_in);
-					Date fecha_date_fi = sdf.parse(fi);
-					f.setTime(fecha_date_fi);
-				} catch (ParseException eini) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("Fecha mal");
-					ventanaErrores("Fecha mal");
-				}
-				try {
-					clientes = controlador.mostrarEntreFechas(i, f);
-				} catch (Exception e2) {
-					// TODO: handle exception
-					System.out.println(e2.getMessage());
-					System.out.println("Error al introducir las fechas.");
-					ventanaErrores("Error al introducir las fechas.");
-				}
-
-				if (clientes == null) {
-					System.out.println("No se pudo listar, el cliente no existe o no tiene facturas.");
-					ventanaErrores("No se ha podido realizar la operacion. ");
-				}else if(clientes.isEmpty()){
-					mostrarTexto("No hay clientes entre estas fechas.");
-					form.setVisible(false);
-				}
-				else {
-
-					form.setVisible(false);
-
-					String cliente = "<html><body>";
-					for (Cliente c : clientes) {
-						cliente += c.toString();
-						cliente += "<br>";
-					}
-					cliente += "</body></html>";
-					mostrarTexto(cliente);
-
-				}
-			}
-		}
-
-		private void borrarCliente() {
-			final JDialog form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
-			Container contenedor = form.getContentPane();
-
-			contenedor.setLayout(new FlowLayout());
-			contenedor.add(nifLabel);
-			contenedor.add(nif);
-
-			BorrarClienteListener listener = new BorrarClienteListener();
-			JButton boton = new JButton("BORRAR");
-			boton.addActionListener(listener);
-			contenedor.add(boton);
-			boton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					form.dispose();
-				}
-			});
-
-			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir sin borrar al cliente.");
-			cancelar.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-
-					form.setVisible(false);
-					form.dispose();
-				}
-			});
-			contenedor.add(cancelar);
-			form.pack();
-			form.setVisible(true);
-			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
-			System.out.println("s");
-
-		}
-
-		private class BorrarClienteListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String niff = nif.getText();
-				Boolean result = controlador.borrarCliente(niff);
-
-				if (!result) {
-					System.out.println("No se pudo crear la factura");
-					ventanaErrores("No se ha podido realizar la operacion. ");
-				} else {
-					ventanaAviso();
-					mostrarIntro();
-					
-				}
-			}
-		}
-
-		private void nuevaEmpresa() {
-			final JDialog form = new JDialog();
-			JPanel paneliz = new JPanel(), panelde = new JPanel(), panelab = new JPanel(), panelar = new JPanel(),
-					panelex = new JPanel();
-			Container contenedor = form.getContentPane();
-			JButton boton1 = new JButton(), boton2 = new JButton();
-			boton1.setText("ACEPTAR");
-			boton1.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					form.dispose();
-				}
-			});
-			boton2.setText("CANCELAR");
-			boton2.setToolTipText("Salir y no anyadir cliente.");
-			boton2.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					form.dispose();
-				}
-			});
-			text1.setText("Tarifa basica: ");
-			text2.setText("Tarifa segun dia: ");
-			text3.setText("Tarifa segun hora: ");
-			text4.setText("Correo electronico: ");
-
-			form.setTitle("Nuevo cliente");
-			contenedor.setLayout(new FlowLayout());
-			paneliz.setLayout(new GridLayout(10, 0));
-			paneliz.add(nombreLabel);
-			paneliz.add(nifLabel);
-			paneliz.add(cpLabel);
-			paneliz.add(provinciaLabel);
-			paneliz.add(poblacionLabel);
-			paneliz.add(text1);
-			paneliz.add(dia);
-			paneliz.add(hora);
-			paneliz.add(text4);
-
-			panelde.setLayout(new GridLayout(10, 0));
-			panelde.add(nombre);
-			panelde.add(nif);
-			panelde.add(cp);
-			panelde.add(provincia);
-			panelde.add(poblacion);
-			panelde.add(text1b);
-			panelde.add(text2b);
-			panelde.add(text3b);
-			panelde.add(text4b);
-
-			panelar.setLayout(new GridLayout(1, 1));
-			panelar.add(paneliz);
-			panelar.add(panelde);
-			panelab.setLayout(new FlowLayout());
-			panelab.add(boton1);
-			panelab.add(boton2);
-			panelex.setLayout(new GridLayout(2, 0));
-			panelex.add(panelar);
-			panelex.add(panelab);
-			contenedor.add(panelex);
-
-			NuevaEmpresaListener listener = new NuevaEmpresaListener();
-			boton1.addActionListener(listener);
-
-			
-			form.pack();
-			form.setVisible(true);
-			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		}
-
-		private void nuevoCliente() {
-			final JDialog form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
-			JPanel paneliz = new JPanel(), panelde = new JPanel(), panelab = new JPanel(), panelar = new JPanel(),
-					panelex = new JPanel();
-			Container contenedor = form.getContentPane();
-			JButton boton1 = new JButton(), boton2 = new JButton();
-			boton1.setText("ACEPTAR");
-			boton1.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					form.dispose();
-				}
-			});
-			boton2.setText("CANCELAR");
-			boton2.setToolTipText("Salir y no anyadir cliente.");
-			boton2.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-
-					
-					form.dispose();
-				}
-			});
-			text1.setText("Tarifa basica: ");
-			text2.setText("Tarifa segun dia: ");
-			text3.setText("Tarifa segun hora: ");
-			text4.setText("Correo electronico: ");
-			text5.setText("Apellidos: ");
-
-			form.setTitle("Nuevo cliente");
-			contenedor.setLayout(new FlowLayout());
-			paneliz.setLayout(new GridLayout(10, 0));
-			paneliz.add(nombreLabel);
-			paneliz.add(text5);
-			paneliz.add(nifLabel);
-			paneliz.add(cpLabel);
-			paneliz.add(provinciaLabel);
-			paneliz.add(poblacionLabel);
-			paneliz.add(text1);
-			paneliz.add(dia);
-			paneliz.add(hora);
-			paneliz.add(text4);
-
-			panelde.setLayout(new GridLayout(10, 0));
-			panelde.add(nombre);
-			panelde.add(text5b);
-			panelde.add(nif);
-			panelde.add(cp);
-			panelde.add(provincia);
-			panelde.add(poblacion);
-			panelde.add(text1b);
-			panelde.add(text2b);
-			panelde.add(text3b);
-			panelde.add(text4b);
-
-			panelar.setLayout(new GridLayout(1, 1));
-			panelar.add(paneliz);
-			panelar.add(panelde);
-			panelab.setLayout(new FlowLayout());
-			panelab.add(boton1);
-			panelab.add(boton2);
-			panelex.setLayout(new GridLayout(2, 0));
-			panelex.add(panelar);
-			panelex.add(panelab);
-			contenedor.add(panelex);
-
-			NuevoClienteListener listener = new NuevoClienteListener();
-			boton1.addActionListener(listener);
-
-			form.pack();
-			form.setVisible(true);
-			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		}
-
-		private class NuevoClienteListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				frame.pack();
-				String name = nombre.getText();
-				String apellidos = text5b.getText();
-				String dni = nif.getText();
-				String pc = cp.getText();
-				String prov = provincia.getText();
-				String pueblo = poblacion.getText();
-				Float tarifaB = Float.parseFloat(text1b.getText());
-				Float tarifaD = Float.parseFloat(text2b.getText());
-				Float tarifaH = Float.parseFloat(text3b.getText());
-				String correo = text4b.getText();
-				int opcionDia = dia.getSelectedIndex();
-				int opcionHorario = hora.getSelectedIndex();
-				Boolean result = controlador.nuevoCliente(name, apellidos, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
-						 correo, opcionDia, opcionHorario);
-				if (!result) {
-					System.out.println("No se pudo crear la factura");
-					ventanaErrores("No se ha podido realizar la operacion. ");
-				} else {
-					ventanaAviso();
-					mostrarIntro();
-					
-				}
-			}
-
-		}
-
-		private class NuevaEmpresaListener implements ActionListener {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String name = nombre.getText();
-				String dni = nif.getText();
-				String pc = cp.getText();
-				String prov = provincia.getText();
-				String pueblo = poblacion.getText();
-				Float tarifaB = Float.parseFloat(text1b.getText());
-				Float tarifaD = Float.parseFloat(text2b.getText());
-				Float tarifaH = Float.parseFloat(text3b.getText());
-				String correo = text4b.getText();
-				int opcionDia = dia.getSelectedIndex();
-				int opcionHorario = hora.getSelectedIndex();
-				Boolean result = controlador.nuevaEmpresa(name, dni, pc, prov, pueblo, tarifaB, tarifaD, tarifaH,
-						 correo, opcionDia, opcionHorario);
-				if (!result) {
-					System.out.println("No se pudo crear la factura");
-					ventanaErrores("No se ha podido realizar la operacion. ");
-				} else {
-					ventanaAviso();
-					mostrarIntro();
-					
-				}
-			}
-		}
-
-		private void cambiarTarifa() {
-			final JDialog form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
-			JPanel paneliz = new JPanel(), panelde = new JPanel(), panelab = new JPanel(), panelar = new JPanel(),
-					panelex = new JPanel();
-			Container contenedor = form.getContentPane();
-			JButton boton1 = new JButton(), boton2 = new JButton();
-			boton1.setText("ACEPTAR");
-			boton1.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					form.dispose();
-				}
-			});
-			boton2.setText("CANCELAR");
-			boton2.setToolTipText("Salir y no cambiar la tarifa.");
-			boton2.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-
-					
-					form.dispose();
-				}
-			});
-			text1.setText("Tarifa basica: ");
-
-			form.setTitle("Cambiar tarifa");
-			contenedor.setLayout(new FlowLayout());
-			paneliz.setLayout(new GridLayout(4, 0));
-			paneliz.add(nifLabel);
-			paneliz.add(text1);
-			paneliz.add(dia);
-			paneliz.add(hora);
-
-			panelde.setLayout(new GridLayout(4, 0));
-			panelde.add(nif);
-			panelde.add(text1b);
-			panelde.add(text2b);
-			panelde.add(text3b);
-
-			panelar.setLayout(new GridLayout(1, 1));
-			panelar.add(paneliz);
-			panelar.add(panelde);
-			panelab.setLayout(new FlowLayout());
-			panelab.add(boton1);
-			panelab.add(boton2);
-			panelex.setLayout(new GridLayout(2, 0));
-			panelex.add(panelar);
-			panelex.add(panelab);
-			contenedor.add(panelex);
-
-			cambiarTarifaListener listener = new cambiarTarifaListener();
-			boton1.addActionListener(listener);
-
-			form.pack();
-			form.setVisible(true);
-			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		}
-
-		private class cambiarTarifaListener implements ActionListener {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String dni = nif.getText();
-				Float tarifaB = Float.parseFloat(text1b.getText());
-				Float tarifaD = Float.parseFloat(text2b.getText());
-				Float tarifaH = Float.parseFloat(text3b.getText());
-				int opcionDia = dia.getSelectedIndex();
-				int opcionHora = hora.getSelectedIndex();
-
-				Boolean result = controlador.cambiarTarifa(dni, tarifaB, tarifaD, tarifaH, opcionDia, opcionHora);
-
-				if (!result) {
-					System.out.println("No se pudo cambiar");
-					ventanaErrores("No se ha podido realizar la operacion. ");
-				} else {
-					ventanaAviso();
-					mostrarIntro();
-					
-				}
-			}
-
-		}
-
-		private void mostrarCliente() {
-			final JDialog form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
-			Container contenedor = form.getContentPane();
-
-			contenedor.setLayout(new FlowLayout());
-			contenedor.add(nifLabel);
-			contenedor.add(nif);
-
-			mostrarClienteListener listener = new mostrarClienteListener();
-			JButton boton = new JButton("MOSTRAR");
-			boton.addActionListener(listener);
-			contenedor.add(boton);
-			boton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					form.dispose();
-				}
-			});
-
-			JButton cancelar = new JButton("CANCELAR");
-			cancelar.setToolTipText("Salir sin mostrar el cliente.");
-			cancelar.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-
-					
-					form.dispose();
-				}
-			});
-			contenedor.add(cancelar);
-			form.pack();
-			form.setVisible(true);
-			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		}
-
-		private class mostrarClienteListener implements ActionListener {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String niff = nif.getText();
-				Cliente cliente = controlador.mostrarCliente(niff);
-				if(cliente==null){
-					System.out.println("No se pudo mostrar.");
-					ventanaErrores("Cliente no existe. ");
-				}else{
-					
-				mostrarTexto(cliente.toString());
-				}
-			}
-
-		}
-
-		private void mostrarTodosClientes() {
-			ArrayList<Cliente> clientes = controlador.mostrarTodos();
-			if (clientes == null) {
-				System.out.println("No se pudo listar porque no hay.");
-				ventanaErrores("No se ha podido realizar la operacion. ");
-			}else if(clientes.isEmpty()){
-				mostrarTexto("No hay clientes entre estas fechas");
-				form.dispose();
-			}
-			else {
-				String cliente = "<html><body>";
-				for (Cliente c : clientes) {
-					cliente += c.toString();
-					cliente += "<br>";
-				}
-				cliente += "</body></html>";
-				mostrarTexto(cliente);
-				
+			} else {
+				ventanaErrores("No se ha podido realizar la operacion.");
 			}
 		}
 	}
 
-	private class MenuCargarGuardarListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JMenuItem item = (JMenuItem) e.getSource();
-			String texto = item.getText();
-			switch (texto) {
-			case "Cargar":
-				System.out.println(texto);
-				cargar();
-				break;
-			case "Guardar":
-				System.out.println(texto);
-				guardar();
-				break;
-
-			}
-		}
-
-		private void guardar() {
-			modelo.guardar();
-		}
-
-		private void cargar() {
-			modelo.cargar();
-			
-		}
-
-	}
-
-	public void ventanaErrores(String mensaje) {
-		JOptionPane.showMessageDialog(frame, mensaje, "ERROR", JOptionPane.ERROR_MESSAGE);
-	}
-
+	//Menu facturas
 	private class MenuFacturasListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JMenuItem item = (JMenuItem) e.getSource();
 			String texto = item.getText();
 			switch (texto) {
 			case "Emitir una factura":
-				System.out.println(texto);
 				generarFactura();
 				break;
 			case "Recuperar los datos de una factura":
-				System.out.println(texto);
 				recuperarDatosFactura();
 				break;
 			case "Recuperar todas las facturas de un cliente":
-				System.out.println(texto);
 				recuperarFacurasCliente();
 				break;
 			case "Recuperar todas las facturas emitidas entre dos fechas":
-				System.out.println(texto);
 				recuperarFactFechas();
 				break;
 			}
 		}
-
+		
+		//Recuperar facturas entre fechas
 		private void recuperarFactFechas() {
-			// TODO Auto-generated method stub
-			form = new JDialog();// JDialog.setDefaultLookAndFeelDecorated(true);
+			form = new JDialog();
 			Container contenedor = form.getContentPane();
 
 			contenedor.setLayout(new FlowLayout());
@@ -1108,11 +999,10 @@ public class Vista implements VistaInt {
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
 		}
 
+		//Escuchador recuperar facturas entre fechas
 		private class RecuperarFactFechas implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String niff = nif.getText();
@@ -1126,32 +1016,23 @@ public class Vista implements VistaInt {
 					Date fecha_date = sdf.parse(ini);
 					i.setTime(fecha_date);
 				} catch (ParseException eini) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("Fecha mal");
-					ventanaErrores("Fechas mal");
+					ventanaErrores("Fechas erronea");
 				}
 				try {
 					Date fecha_date = sdf.parse(fi);
 					f.setTime(fecha_date);
 				} catch (ParseException efi) {
-					System.out.println("Error al introducir la fecha recuerde el formato es dd/MM/yyyy ");
-					System.out.println("Fecha mal");
-					ventanaErrores("Fecha mal");
+					ventanaErrores("Fecha erronea");
 				}
-
 				try {
-
 					fact = controlador.recuperarFactFechas(i, f, niff);
 				} catch (Exception e2) {
-					System.out.println("Fecha inicio es menor que fecha fin");
-					ventanaErrores("Fecha inicio es menor que fecha fin");
+					ventanaErrores("Error al introducir las fechas.");
 				}
 
 				if (fact == null) {
-					System.out.println("No se pudo listar porque el cliente o no existe o no tiene facturas");
-					ventanaErrores("No se ha podido realizar la operacion. ");
+					ventanaErrores("No se ha podido realizar la operacion.");
 				} else {
-
 					form.setVisible(false);
 
 					String factu = "<html><body>";
@@ -1164,7 +1045,8 @@ public class Vista implements VistaInt {
 				}
 			}
 		}
-
+		
+		//Recuperar facturas de cliente
 		private void recuperarFacurasCliente() {
 			form = new JDialog();
 			Container contenedor = form.getContentPane();
@@ -1193,21 +1075,15 @@ public class Vista implements VistaInt {
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		}
-
+		
+		//Escuchador recuperar facturas de cliente
 		private class RecuperarFacturasCliente implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				System.out.println("Recuperando facturas cliente.");
 				String niff = nif.getText();
 
 				boolean result = controlador.facurasCliente(niff);
-				if (!result) {
-					System.out.println("No se pudo crear la factura.");
-					ventanaErrores("No se ha podido realizar la operacion. ");
-				} else {
-
+				if (result) {
 					form.setVisible(false);
 					List<Factura> facturas = modelo.getFacturasCliente();
 					String fact = "<html><body>";
@@ -1217,12 +1093,13 @@ public class Vista implements VistaInt {
 					}
 					fact += "</body></html>";
 					mostrarTexto(fact);
-
+				} else {
+					ventanaErrores("No se ha podido realizar la operacion.");
 				}
-
 			}
 		}
-
+		
+		//Recuperar datos de factura
 		private void recuperarDatosFactura() {
 			form = new JDialog();
 			Container contenedor = form.getContentPane();
@@ -1250,22 +1127,18 @@ public class Vista implements VistaInt {
 			form.pack();
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
 		}
-
+		
+		//Escuchador recuperar datos de factura
 		private class RecuperarDatosFactura implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				int codigo = -1;
-				System.out.println("Recuperando factura.");
+				
 				try {
-
 					codigo = Integer.parseInt(idFactura.getText());
 				} catch (Exception e2) {
-					System.out.println("Introduce un numero.");
-					ventanaErrores("Introduce un numero. ");
+					ventanaErrores("Introduce un numero.");
 				}
 				boolean result = false;
 				try {
@@ -1273,20 +1146,17 @@ public class Vista implements VistaInt {
 				} catch (CodigoInvalido e1) {
 					e1.printStackTrace();
 				}
-				if (!result) {
-					System.out.println("No se pudo crear la factura.");
-					ventanaErrores("No se ha podido realizar la operacion.");
-				} else {
-
+				if (result) {
 					form.setVisible(false);
 					Factura factura = modelo.getFacturaBuscada();
 					mostrarTexto(factura.toString());
-
+				} else {
+					ventanaErrores("No se ha podido realizar la operacion.");
 				}
 			}
-
 		}
-
+		
+		//Generar factura
 		private void generarFactura() {
 			form = new JDialog();
 			Container contenedor = form.getContentPane();
@@ -1314,14 +1184,12 @@ public class Vista implements VistaInt {
 			form.setVisible(true);
 			form.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		}
-
+		
+		//Escuchador generar factura
 		private class GenerarFacturaListener implements ActionListener {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				frame.pack();
-				System.out.println("Generando factura.");
 				String niff = nif.getText();
 				boolean result = false;
 				try {
@@ -1331,22 +1199,70 @@ public class Vista implements VistaInt {
 				} catch (NifInvalido e1) {
 					e1.printStackTrace();
 				}
-				if (!result) {
-					System.out.println("No se pudo crear la factura.");
-					ventanaErrores("No se ha podido realizar la operacion.");
-				} else {
+				if (result) {
 					ventanaAviso();
 					form.setVisible(false);
 					mostrarIntro();
+				} else {
+					ventanaErrores("No se ha podido realizar la operacion.");
 				}
 			}
 
 		}
+	}
+	
+	//Menu cargar y guardar
+	private class MenuCargarGuardarListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JMenuItem item = (JMenuItem) e.getSource();
+			String texto = item.getText();
+			switch (texto) {
+			case "Cargar":
+				cargar();
+				break;
+			case "Guardar":
+				guardar();
+				break;
+			}
+		}
+
+		private void guardar() {
+			modelo.guardar();
+		}
+
+		private void cargar() {
+			modelo.cargar();
+		}
+	}
+	
+	//Texto aplicacion
+	private void mostrarIntro() {
+		Container contenedor = frame.getContentPane();
+		texto.setText("Bienvenido a la apicacion.");
+		contenedor.add(texto);
+		frame.pack();
+		frame.setVisible(true);
 
 	}
+	
+	//Texto para printear en aplicacion
+	private void mostrarTexto(String text) {
+		Container contenedor = frame.getContentPane();
+		texto.setText(text);
+		contenedor.add(texto);
+		frame.pack();
+		frame.setVisible(true);
+	}
+	
+	//Ventana error
+	public void ventanaErrores(String mensaje) {
+		JOptionPane.showMessageDialog(frame, mensaje, "ERROR", JOptionPane.ERROR_MESSAGE);
+	}
 
+	//Ventana correctamente
 	public void ventanaAviso() {
-		JOptionPane.showMessageDialog(form, "¡Accion realizada Correctamente!");
-
+		JOptionPane.showMessageDialog(form, "¡Accion realizada correctamente!");
 	}
+	
 }

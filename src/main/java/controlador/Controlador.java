@@ -31,8 +31,8 @@ public class Controlador implements ControladorInt {
 	private VistaInt vista;
 
 	public boolean generarFactura(String nif) throws ErrorFecha, NifInvalido {
-		System.out.println("Soy el controlador  :" + nif);
 		boolean result = modelo.generarFactura(nif);
+		System.out.println("Generar factura.");
 		return result;
 	}
 
@@ -51,20 +51,29 @@ public class Controlador implements ControladorInt {
 	public ModeloInt cargar() {
 		// TODO Auto-generated method stub
 		modelo.cargar();
+		System.out.println("Cargar.");
 		return modelo;
 
+	}
+	
+	@Override
+	public void guardar() {
+		// TODO Auto-generated method stub
+		System.out.println("Guardar.");
 	}
 
 	@Override
 	public boolean datosFactura(int codigo) throws CodigoInvalido {
 		// TODO Auto-generated method stub
 		boolean result = modelo.recuperarFacturaPorCodigo(codigo);
+		System.out.println("Datos factura.");
 		return result;
 	}
 
 	@Override
 	public boolean facurasCliente(String nif) {
 		// TODO Auto-generated method stub
+		System.out.println("Factuas cliente.");
 		boolean result = false;
 		try {
 			result = modelo.recuperarFacturasCliente(nif);
@@ -78,15 +87,11 @@ public class Controlador implements ControladorInt {
 		return result;
 	}
 
-	@Override
-	public void guardar() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public List<Factura> recuperarFactFechas(Calendar i, Calendar f, String NIF) throws ErrorFecha {
 		// TODO Auto-generated method stub
+		System.out.println("Recuperar facturas entre fechas.");
 		if (modelo.getCliente(NIF) != null) {
 			Cliente cliente = modelo.getCliente(NIF);
 			ArrayList<Factura> datosFiltrar = new ArrayList<Factura>();
@@ -105,6 +110,7 @@ public class Controlador implements ControladorInt {
 		Calendar fecha = Calendar.getInstance();
 		Llamada llamada = new Llamada(tel, fecha, tiempo);
 		boolean result = modelo.addLlamada(llamada, nif);
+		System.out.println("Alta nueva llamada.");
 		return result;
 	}
 
@@ -112,29 +118,30 @@ public class Controlador implements ControladorInt {
 	public boolean listLlamdasCliente(String nif) throws NifInvalido {
 		// TODO Auto-generated method stub
 		boolean result = modelo.LlamadasDeUnCliente(nif);
+		System.out.println("Lista llamadas de un cliente.");
 		return result;
 	}
 
 	@Override
-	public List<Llamada> recuperarLlamadasFechas(Calendar i, Calendar f, String NIF) throws ErrorFecha {
+	public List<Llamada> recuperarLlamadasFechas(Calendar i, Calendar f, String nif) throws ErrorFecha {
 		// TODO Auto-generated method stub
-		if (modelo.getCliente(NIF) != null) {
-			ArrayList<Llamada> datosMostrar = modelo.recuperaEntreFechas(modelo.getCliente(NIF).getListaLlamadas(), i, f);
-
-			if (datosMostrar.isEmpty()) {
+		System.out.println("Recuperar llamadas entre fechas.");
+		if (modelo.getCliente(nif) != null) {
+			ArrayList<Llamada> datosMostrar = modelo.recuperaEntreFechas(modelo.getCliente(nif).getListaLlamadas(), i, f);
+			/*if (datosMostrar.isEmpty()) {
 				System.out.println("No hay llamadas en este perido");
 			}
 			for (Llamada l : datosMostrar) {
 				System.out.println(l.toString());
-			}
+			}*/
 			return datosMostrar;
 		}
 		return null;
 	}
 
 	@Override
-	public boolean nuevoCliente(String name, String apellidos, String dni, String pc, String prov, String pueblo,
-			double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario) {
+	public boolean nuevoCliente(String name, String apellidos, String dni, String pc, String prov, String pueblo, double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario) {
+		System.out.println("Nuevo cliente.");
 		FactoriaTarifas factoriaN = new FactoriaTarifas();
 		Tarifa basica = new Tarifa(tarifaB);
 		Tarifa segunDia = factoriaN.getTarifa(TipoTarifaDia.getOpcion(dia), basica, tarifaD);
@@ -151,8 +158,8 @@ public class Controlador implements ControladorInt {
 	}
 
 	@Override
-	public boolean nuevaEmpresa(String name, String dni, String pc, String prov, String pueblo,
-			double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario) {
+	public boolean nuevaEmpresa(String name, String dni, String pc, String prov, String pueblo, double tarifaB, double tarifaD, double tarifaH, String correo, int dia, int horario) {
+		System.out.println("Nueva empresa.");
 		FactoriaTarifas factoriaN = new FactoriaTarifas();
 		Tarifa basica = new Tarifa(tarifaB);
 		Tarifa segunDia = factoriaN.getTarifa(TipoTarifaDia.getOpcion(dia), basica, tarifaD);
@@ -171,6 +178,7 @@ public class Controlador implements ControladorInt {
 	@Override
 	public boolean borrarCliente(String niff) {
 		boolean result = modelo.borrarCliente(niff);
+		System.out.println("Borrar cliente.");
 		return result;
 	}
 
@@ -180,14 +188,15 @@ public class Controlador implements ControladorInt {
 		Tarifa basica = new Tarifa(tarifaB);
 		Tarifa segunDia = factoriaH.getTarifa(TipoTarifaDia.getOpcion(dia), basica, tarifaD);
 		Tarifa segunHora = factoriaH.getTarifa(TipoTarifaHorario.getOpcion(horario), segunDia, tarifaH);
-
 		Boolean result = modelo.cambiarTarifa(dni, segunHora);
+		System.out.println("Cambiar tarifa.");
 		return result;
 	}
 
 	@Override
 	public Cliente mostrarCliente(String niff) {
 		Cliente cliente = modelo.getCliente(niff);
+		System.out.println("Mostrar cliente.");
 		return cliente;
 	}
 
@@ -197,13 +206,7 @@ public class Controlador implements ControladorInt {
 		for(String nif: modelo.getAllClients()) {
 			datosMostrar.add(modelo.getCliente(nif));
 		}
-
-		if (datosMostrar.isEmpty()) {
-			System.out.println("No hay clientes en este periodo");
-		}
-		for (Cliente cli : datosMostrar) {
-			System.out.println(cli.toString());
-		}
+		System.out.println("Mostrar todos los clientes.");
 		return datosMostrar;
 	}
 
@@ -214,13 +217,7 @@ public class Controlador implements ControladorInt {
 			clientes.add(modelo.getCliente(nif));
 		}
 		ArrayList<Cliente> datosMostrar = modelo.recuperaEntreFechas(clientes, i, f);
-
-		if (datosMostrar.isEmpty()) {
-			System.out.println("No hay clientes en este periodo");
-		}
-		for (Cliente cli : datosMostrar) {
-			System.out.println(cli.toString());
-		}
+		System.out.println("Mostrar clientes entre fechas.");
 		return datosMostrar;
 	}
 }
