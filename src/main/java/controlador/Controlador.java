@@ -53,15 +53,8 @@ public class Controlador implements ControladorInt {
 		modelo.cargar();
 		System.out.println("Cargar.");
 		return modelo;
-
 	}
 	
-	@Override
-	public void guardar() {
-		// TODO Auto-generated method stub
-		System.out.println("Guardar.");
-	}
-
 	@Override
 	public boolean datosFactura(int codigo) throws CodigoInvalido {
 		// TODO Auto-generated method stub
@@ -69,7 +62,7 @@ public class Controlador implements ControladorInt {
 		System.out.println("Datos factura.");
 		return result;
 	}
-
+	
 	@Override
 	public boolean facurasCliente(String nif) {
 		// TODO Auto-generated method stub
@@ -86,7 +79,12 @@ public class Controlador implements ControladorInt {
 		}
 		return result;
 	}
-
+	
+	@Override
+	public void guardar() {
+		modelo.guardar();
+		System.out.println("Guardar.");
+	}
 
 	@Override
 	public List<Factura> recuperarFactFechas(Calendar i, Calendar f, String NIF) throws ErrorFecha {
@@ -128,12 +126,6 @@ public class Controlador implements ControladorInt {
 		System.out.println("Recuperar llamadas entre fechas.");
 		if (modelo.getCliente(nif) != null) {
 			ArrayList<Llamada> datosMostrar = modelo.recuperaEntreFechas(modelo.getCliente(nif).getListaLlamadas(), i, f);
-			/*if (datosMostrar.isEmpty()) {
-				System.out.println("No hay llamadas en este perido");
-			}
-			for (Llamada l : datosMostrar) {
-				System.out.println(l.toString());
-			}*/
 			return datosMostrar;
 		}
 		return null;
